@@ -134,6 +134,7 @@ mk_sparse(DSS_HUGE i, DSS_HUGE * ok, long seq)
 	long            low_bits;
 
 	*ok = i;
+	/* 生成o_orderkey时使用该函数生成稀疏数，暂时注释*/
 	low_bits = (long) (i & ((1 << SPARSE_KEEP) - 1));
 	*ok = *ok >> SPARSE_KEEP;
 	*ok = *ok << SPARSE_BITS;
