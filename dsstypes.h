@@ -56,25 +56,25 @@ long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c));
 int pr_cust    PROTO((customer_t * c, int mode));
 int ld_cust    PROTO((customer_t * c, int mode));
 
-typedef struct
+typedef struct/*Primary Key:ORDERKEY, LINENUMBER*/
 {
     DSS_HUGE	    okey; 
     DSS_HUGE            partkey;
     DSS_HUGE            suppkey;
-    DSS_HUGE            lcnt;
+    DSS_HUGE            lcnt; /*LineNumber*/
     DSS_HUGE            quantity;
-    DSS_HUGE            eprice;
+    DSS_HUGE            eprice;/*extendprice*/
     DSS_HUGE            discount;
     DSS_HUGE            tax;
-    char            rflag[1];
-    char            lstatus[1];
-    char            cdate[DATE_LEN];
-    char            sdate[DATE_LEN];
-    char            rdate[DATE_LEN];
+    char            rflag[1];/*returnflag*/
+    char            lstatus[1];/*linestatus*/
+    char            cdate[DATE_LEN];/*commitDate*/
+    char            sdate[DATE_LEN];/*shipDate*/
+    char            rdate[DATE_LEN];/*receiptDate*/
     char           shipinstruct[MAXAGG_LEN + 1];
     char           shipmode[MAXAGG_LEN + 1];
     char           comment[L_CMNT_MAX + 1];
-    int            clen;
+    int            clen;/*length of comment*/
 }               line_t;
 
 typedef struct
@@ -86,11 +86,11 @@ typedef struct
     char            odate[DATE_LEN];
     char            opriority[MAXAGG_LEN + 1];
     char            clerk[O_CLRK_LEN + 1];
-    long            spriority;
-    DSS_HUGE            lines;
+    long            spriority; /*ship-priority*/
+    DSS_HUGE            lines;  /*该order包含多少个lines 最少1个，最多7个*/
     char            comment[O_CMNT_MAX + 1];
-    int            clen;
-    line_t          l[O_LCNT_MAX];
+    int            clen; /* length of comment*/
+    line_t          l[O_LCNT_MAX]; /* 每个order最多包含7个lineitem*/
 }               order_t;
 
 /* order.c */
@@ -104,7 +104,7 @@ typedef struct
     DSS_HUGE            partkey;
     DSS_HUGE            suppkey;
     DSS_HUGE            qty;
-    DSS_HUGE            scost;
+    DSS_HUGE            scost; /*supplycost*/
     char           comment[PS_CMNT_MAX + 1];
     int            clen;
 }               partsupp_t;
@@ -117,7 +117,7 @@ typedef struct
     char           mfgr[P_MFG_LEN + 1];
     char           brand[P_BRND_LEN + 1];
     char           type[P_TYPE_LEN + 1];
-    int            tlen;
+    int            tlen; /* length of type*/
     DSS_HUGE           size;
     char           container[P_CNTR_LEN + 1];
     DSS_HUGE           retailprice;
@@ -136,7 +136,7 @@ typedef struct
     DSS_HUGE            suppkey;
     char            name[S_NAME_LEN + 1];
     char            address[S_ADDR_MAX + 1];
-    int             alen;
+    int             alen;/*length of address*/
     DSS_HUGE            nation_code;
     char            phone[PHONE_LEN + 1];
     DSS_HUGE            acctbal;

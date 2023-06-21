@@ -109,8 +109,8 @@ mk_cust(DSS_HUGE n_cust, customer_t * c)
 		sprintf(szFormat, C_NAME_FMT, 9, HUGE_FORMAT + 1);
 		bInit = 1;
 	}
-	c->custkey = n_cust;
-	sprintf(c->name, szFormat, C_NAME_TAG, n_cust);
+	c->custkey = n_cust; // custkey是连续数
+	sprintf(c->name, szFormat, C_NAME_TAG, n_cust);/*Customer#000000001 与custkey一一对应*/
 	V_STR(C_ADDR_LEN, C_ADDR_SD, c->address);
 	c->alen = (int)strlen(c->address);
 	RANDOM(i, 0, (nations.count - 1), C_NTRG_SD);
@@ -172,8 +172,11 @@ mk_order(DSS_HUGE index, order_t * o, long upd_num)
 	}
 	if (asc_date == NULL)
 		asc_date = mk_ascdate();
-	mk_sparse(index, &o->okey,
-		  (upd_num == 0) ? 0 : 1 + upd_num / (10000 / UPD_PCT));
+	
+	o->okey = index;
+	/*生成o_okey 的稀疏数*/
+	// mk_sparse(index, &o->okey,
+	// 	  (upd_num == 0) ? 0 : 1 + upd_num / (10000 / UPD_PCT));
 	if (scale >= 30000)
 		RANDOM64(o->custkey, O_CKEY_MIN, O_CKEY_MAX, O_CKEY_SD);
 	else
@@ -190,10 +193,13 @@ mk_order(DSS_HUGE index, order_t * o, long upd_num)
 	strcpy(o->odate, asc_date[tmp_date - STARTDATE]);
 
 	pick_str(&o_priority_set, O_PRIO_SD, o->opriority);
+
 	RANDOM(clk_num, 1, MAX((scale * O_CLRK_SCL), O_CLRK_SCL), O_CLRK_SD);
 	sprintf(o->clerk, szFormat, O_CLRK_TAG, clk_num);
+
 	TEXT(O_CMNT_LEN, O_CMNT_SD, o->comment);
-	o->clen = (int)strlen(o->comment);
+	o->clen = (int)strlen(o->comment); 
+
 #ifdef DEBUG
 	if (o->clen > O_CMNT_MAX)
 		fprintf(stderr, "comment error: O%d\n", index);
@@ -204,24 +210,34 @@ mk_order(DSS_HUGE index, order_t * o, long upd_num)
 	o->orderstatus = 'O';
 	ocnt = 0;
 
+	/*该order包含多少个lines 最少1个，最多7个*/
 	RANDOM(o->lines, O_LCNT_MIN, O_LCNT_MAX, O_LCNT_SD);
 	for (lcnt = 0; lcnt < o->lines; lcnt++)
 	{
 		o->l[lcnt].okey = o->okey;;
-		o->l[lcnt].lcnt = lcnt + 1;
+		o->l[lcnt].lcnt = lcnt + 1; /*从1开始计数*/
+
 		RANDOM(o->l[lcnt].quantity, L_QTY_MIN, L_QTY_MAX, L_QTY_SD);
 		RANDOM(o->l[lcnt].discount, L_DCNT_MIN, L_DCNT_MAX, L_DCNT_SD);
 		RANDOM(o->l[lcnt].tax, L_TAX_MIN, L_TAX_MAX, L_TAX_SD);
+
 		pick_str(&l_instruct_set, L_SHIP_SD, o->l[lcnt].shipinstruct);
 		pick_str(&l_smode_set, L_SMODE_SD, o->l[lcnt].shipmode);
+
 		TEXT(L_CMNT_LEN, L_CMNT_SD, o->l[lcnt].comment);
 		o->l[lcnt].clen = (int)strlen(o->l[lcnt].comment);
+
+		/* 随机生成o_partkey*/
 		if (scale >= 30000)
 			RANDOM64(o->l[lcnt].partkey, L_PKEY_MIN, L_PKEY_MAX, L_PKEY_SD);
 		else
 			RANDOM(o->l[lcnt].partkey, L_PKEY_MIN, L_PKEY_MAX, L_PKEY_SD);
+
 		rprice = rpb_routine(o->l[lcnt].partkey);
+
 		RANDOM(supp_num, 0, 3, L_SKEY_SD);
+
+		/*根据partkey和supp_num生成suppkey*/
 		PART_SUPP_BRIDGE(o->l[lcnt].suppkey, o->l[lcnt].partkey, supp_num);
 		o->l[lcnt].eprice = rprice * o->l[lcnt].quantity;
 
@@ -285,23 +301,37 @@ mk_part(DSS_HUGE index, part_t * p)
 		sprintf(szBrandFormat, P_BRND_FMT, 2, HUGE_FORMAT + 1);
 		bInit = 1;
 	}
-	p->partkey = index;
+	p->partkey = index; 
 	agg_str(&colors, (long) P_NAME_SCL, (long) P_NAME_SD, p->name);
+
 	RANDOM(temp, P_MFG_MIN, P_MFG_MAX, P_MFG_SD);
 	sprintf(p->mfgr, szFormat, P_MFG_TAG, temp);
+
 	RANDOM(brnd, P_BRND_MIN, P_BRND_MAX, P_BRND_SD);
 	sprintf(p->brand, szBrandFormat, P_BRND_TAG, (temp * 10 + brnd));
+
 	p->tlen = pick_str(&p_types_set, P_TYPE_SD, p->type);
+
 	p->tlen = (int)strlen(p_types_set.list[p->tlen].text);
+
 	RANDOM(p->size, P_SIZE_MIN, P_SIZE_MAX, P_SIZE_SD);
 	pick_str(&p_cntr_set, P_CNTR_SD, p->container);
 	p->retailprice = rpb_routine(index);
+
 	TEXT(P_CMNT_LEN, P_CMNT_SD, p->comment);
 	p->clen = (int)strlen(p->comment);
 
 	for (snum = 0; snum < SUPP_PER_PART; snum++)
 	{
 		p->s[snum].partkey = p->partkey;
+		/*
+		#define PART_SUPP_BRIDGE(tgt, p, s) \
+		{ \
+		DSS_HUGE tot_scnt = tdefs[SUPP].base * scale; \
+		tgt = (p + s *  (tot_scnt / SUPP_PER_PART +  \
+		(long) ((p - 1) / tot_scnt))) % tot_scnt + 1; \
+		}
+		*/
 		PART_SUPP_BRIDGE(p->s[snum].suppkey, index, snum);
 		RANDOM(p->s[snum].qty, PS_QTY_MIN, PS_QTY_MAX, PS_QTY_SD);
 		RANDOM(p->s[snum].scost, PS_SCST_MIN, PS_SCST_MAX, PS_SCST_SD);
@@ -325,11 +355,14 @@ mk_supp(DSS_HUGE index, supplier_t * s)
 	}
 	s->suppkey = index;
 	sprintf(s->name, szFormat, S_NAME_TAG, index);
+
 	V_STR(S_ADDR_LEN, S_ADDR_SD, s->address);
 	s->alen = (int)strlen(s->address);
 	RANDOM(i, 0, nations.count - 1, S_NTRG_SD);
 	s->nation_code = i;
+
 	gen_phone(i, s->phone, S_PHNE_SD);
+
 	RANDOM(s->acctbal, S_ABAL_MIN, S_ABAL_MAX, S_ABAL_SD);
 
 	TEXT(S_CMNT_LEN, S_CMNT_SD, s->comment);
