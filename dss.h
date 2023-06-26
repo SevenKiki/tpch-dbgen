@@ -179,7 +179,7 @@ typedef struct
    DSS_HUGE      base;
    int       (*loader) ();
    long      (*gen_seed)();
-   int       child;
+   int       child; /*会附带生成的表*/
    DSS_HUGE vtotal;
 }         tdef;
 

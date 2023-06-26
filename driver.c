@@ -294,6 +294,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 	DSS_HUGE rows_per_segment=0;
 	DSS_HUGE rows_this_segment=-1;
 	DSS_HUGE residual_rows=0;
+	DSS_HUGE ps_num = 0;
 
 	if (insert_segments)
 		{
@@ -347,7 +348,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 		case PSUPP:
 		case PART:
   		case PART_PSUPP: 
-			mk_part (i, &part);
+			ps_num = mk_part (i, ps_num, &part);
 			if (set_seeds == 0)
 				tdefs[tnum].loader(&part, upd_num);
 			break;

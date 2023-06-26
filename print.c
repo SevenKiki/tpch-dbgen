@@ -303,6 +303,7 @@ pr_psupp(part_t *part, int mode)
    for (i = 0; i < SUPP_PER_PART; i++)
       {
       PR_STRT(ps_fp);
+      PR_HUGE(ps_fp, &part->s[i].pskey);
       PR_HUGE(ps_fp, &part->s[i].partkey);
       PR_HUGE(ps_fp, &part->s[i].suppkey);
       PR_HUGE(ps_fp, &part->s[i].qty);

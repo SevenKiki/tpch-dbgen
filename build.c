@@ -61,6 +61,8 @@ extern adhoc_t  adhocs[];
     tgt = (p + s *  (tot_scnt / SUPP_PER_PART +  \
 	(long) ((p - 1) / tot_scnt))) % tot_scnt + 1; \
     }
+#define PSKEY_PART_SUPP_BRIDGE(tgt, p, s,p_num, s_num)
+// 如何根据两个数a和b生成一个唯一的key，其中a的取值范围为1-a_num， b的取值范围为1-b_num，其中每一个
 #define V_STR(avg, sd, tgt)  a_rnd((int)(avg * V_STR_LOW),(int)(avg * V_STR_HGH), sd, tgt)
 #define TEXT(avg, sd, tgt)  dbg_text(tgt, (int)(avg * V_STR_LOW),(int)(avg * V_STR_HGH), sd)
 static void gen_phone PROTO((DSS_HUGE ind, char *target, long seed));
@@ -147,7 +149,7 @@ mk_sparse(DSS_HUGE i, DSS_HUGE * ok, long seq)
 }
 
 long
-mk_order(DSS_HUGE index, order_t * o, long upd_num)
+mk_order(DSS_HUGE index, order_t * o, partsupp_t *ps,  upd_num)
 {
 	DSS_HUGE        lcnt;
 	DSS_HUGE        rprice;
@@ -239,6 +241,12 @@ mk_order(DSS_HUGE index, order_t * o, long upd_num)
 
 		/*根据partkey和supp_num生成suppkey*/
 		PART_SUPP_BRIDGE(o->l[lcnt].suppkey, o->l[lcnt].partkey, supp_num);
+		// ps->partkey = o->l[lcnt].partkey
+		// 根据partkey(取值范围1-200000)， suppkey(取值范围1-10000)，生成一个唯一的key，要求key值的范围为(1-800000),其中每一个partkey最多对应4个suppkey
+
+
+		pskey_part_supp_bridge(o->l[lcnt].pskey, o->l[lcnt].partkey,o->l[lcnt].suppkey,)
+
 		o->l[lcnt].eprice = rprice * o->l[lcnt].quantity;
 
 		o->totalprice +=
@@ -286,7 +294,7 @@ mk_order(DSS_HUGE index, order_t * o, long upd_num)
 }
 
 long
-mk_part(DSS_HUGE index, part_t * p)
+mk_part(DSS_HUGE index,DSS_HUGE psnum, part_t * p)
 {
 	DSS_HUGE        temp;
 	long            snum;
@@ -321,6 +329,7 @@ mk_part(DSS_HUGE index, part_t * p)
 	TEXT(P_CMNT_LEN, P_CMNT_SD, p->comment);
 	p->clen = (int)strlen(p->comment);
 
+
 	for (snum = 0; snum < SUPP_PER_PART; snum++)
 	{
 		p->s[snum].partkey = p->partkey;
@@ -338,7 +347,7 @@ mk_part(DSS_HUGE index, part_t * p)
 		TEXT(PS_CMNT_LEN, PS_CMNT_SD, p->s[snum].comment);
 		p->s[snum].clen = (int)strlen(p->s[snum].comment);
 	}
-	return (0);
+	return (psnum+snum);
 }
 
 long

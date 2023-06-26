@@ -66,6 +66,7 @@ typedef struct/*Primary Key:ORDERKEY, LINENUMBER*/
     DSS_HUGE            eprice;/*extendprice*/
     DSS_HUGE            discount;
     DSS_HUGE            tax;
+    DSS_HUGE            pskey /*新增字段*/
     char            rflag[1];/*returnflag*/
     char            lstatus[1];/*linestatus*/
     char            cdate[DATE_LEN];/*commitDate*/
@@ -75,6 +76,7 @@ typedef struct/*Primary Key:ORDERKEY, LINENUMBER*/
     char           shipmode[MAXAGG_LEN + 1];
     char           comment[L_CMNT_MAX + 1];
     int            clen;/*length of comment*/
+
 }               line_t;
 
 typedef struct
@@ -90,6 +92,7 @@ typedef struct
     DSS_HUGE            lines;  /*该order包含多少个lines 最少1个，最多7个*/
     char            comment[O_CMNT_MAX + 1];
     int            clen; /* length of comment*/
+
     line_t          l[O_LCNT_MAX]; /* 每个order最多包含7个lineitem*/
 }               order_t;
 
@@ -101,6 +104,7 @@ void	mk_sparse	PROTO((DSS_HUGE index, DSS_HUGE *ok, long seq));
 
 typedef struct
 {
+    DSS_HUGE             pskey; /*新增字段*/
     DSS_HUGE            partkey;
     DSS_HUGE            suppkey;
     DSS_HUGE            qty;
@@ -123,11 +127,14 @@ typedef struct
     DSS_HUGE           retailprice;
     char           comment[P_CMNT_MAX + 1];
     int            clen;
+    DSS_HUGE        psbegin;/* 新增字段，ps_key 的开始值*/
+    
     partsupp_t     s[SUPP_PER_PART];
 }               part_t;
 
 /* parts.c */
-long mk_part   PROTO((DSS_HUGE index, part_t * p));
+// long mk_part   PROTO((DSS_HUGE index, part_t * p));
+long mk_part   PROTO((DSS_HUGE index, DSS_HUGE psnum, part_t * p)); /*make part表的同时加入ps_key字段*/
 int pr_part    PROTO((part_t * part, int mode));
 int ld_part    PROTO((part_t * part, int mode));
 
