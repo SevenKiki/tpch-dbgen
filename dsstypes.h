@@ -66,7 +66,7 @@ typedef struct/*Primary Key:ORDERKEY, LINENUMBER*/
     DSS_HUGE            eprice;/*extendprice*/
     DSS_HUGE            discount;
     DSS_HUGE            tax;
-    DSS_HUGE            pskey /*新增字段*/
+    DSS_HUGE            pskey; /*新增字段*/
     char            rflag[1];/*returnflag*/
     char            lstatus[1];/*linestatus*/
     char            cdate[DATE_LEN];/*commitDate*/

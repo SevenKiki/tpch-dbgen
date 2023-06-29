@@ -149,7 +149,7 @@ mk_sparse(DSS_HUGE i, DSS_HUGE * ok, long seq)
 }
 
 long
-mk_order(DSS_HUGE index, order_t * o, partsupp_t *ps,  upd_num)
+mk_order(DSS_HUGE index, order_t * o, long  upd_num)
 {
 	DSS_HUGE        lcnt;
 	DSS_HUGE        rprice;
@@ -238,14 +238,15 @@ mk_order(DSS_HUGE index, order_t * o, partsupp_t *ps,  upd_num)
 		rprice = rpb_routine(o->l[lcnt].partkey);
 
 		RANDOM(supp_num, 0, 3, L_SKEY_SD);
+		// fprintf(stderr, "supp_num :%d\n", supp_num);
 
 		/*根据partkey和supp_num生成suppkey*/
 		PART_SUPP_BRIDGE(o->l[lcnt].suppkey, o->l[lcnt].partkey, supp_num);
+		o->l[lcnt].pskey = (o->l[lcnt].suppkey-1) * SUPP_PER_PART + supp_num + 1;
+
 		// ps->partkey = o->l[lcnt].partkey
 		// 根据partkey(取值范围1-200000)， suppkey(取值范围1-10000)，生成一个唯一的key，要求key值的范围为(1-800000),其中每一个partkey最多对应4个suppkey
-
-
-		pskey_part_supp_bridge(o->l[lcnt].pskey, o->l[lcnt].partkey,o->l[lcnt].suppkey,)
+		// pskey_part_supp_bridge(o->l[lcnt].pskey, o->l[lcnt].partkey,o->l[lcnt].suppkey,);
 
 		o->l[lcnt].eprice = rprice * o->l[lcnt].quantity;
 
@@ -303,6 +304,8 @@ mk_part(DSS_HUGE index,DSS_HUGE psnum, part_t * p)
 	static char     szFormat[100];
 	static char     szBrandFormat[100];
 
+	DSS_HUGE 		psBeginNum = 1; /* 新增字段： 标记本partkey对应ps_key 的开始数N*/
+
 	if (!bInit)
 	{
 		sprintf(szFormat, P_MFG_FMT, 1, HUGE_FORMAT + 1);
@@ -346,8 +349,9 @@ mk_part(DSS_HUGE index,DSS_HUGE psnum, part_t * p)
 		RANDOM(p->s[snum].scost, PS_SCST_MIN, PS_SCST_MAX, PS_SCST_SD);
 		TEXT(PS_CMNT_LEN, PS_CMNT_SD, p->s[snum].comment);
 		p->s[snum].clen = (int)strlen(p->s[snum].comment);
+		p->s[snum].pskey = psBeginNum++;
 	}
-	return (psnum+snum);
+	// return (psnum+snum);
 }
 
 long
