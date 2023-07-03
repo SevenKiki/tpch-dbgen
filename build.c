@@ -242,7 +242,7 @@ mk_order(DSS_HUGE index, order_t * o, long  upd_num)
 
 		/*根据partkey和supp_num生成suppkey*/
 		PART_SUPP_BRIDGE(o->l[lcnt].suppkey, o->l[lcnt].partkey, supp_num);
-		o->l[lcnt].pskey = (o->l[lcnt].suppkey-1) * SUPP_PER_PART + supp_num + 1;
+		o->l[lcnt].pskey = (o->l[lcnt].partkey-1) * SUPP_PER_PART + supp_num + 1;
 
 		// ps->partkey = o->l[lcnt].partkey
 		// 根据partkey(取值范围1-200000)， suppkey(取值范围1-10000)，生成一个唯一的key，要求key值的范围为(1-800000),其中每一个partkey最多对应4个suppkey
@@ -349,7 +349,7 @@ mk_part(DSS_HUGE index,DSS_HUGE psnum, part_t * p)
 		RANDOM(p->s[snum].scost, PS_SCST_MIN, PS_SCST_MAX, PS_SCST_SD);
 		TEXT(PS_CMNT_LEN, PS_CMNT_SD, p->s[snum].comment);
 		p->s[snum].clen = (int)strlen(p->s[snum].comment);
-		p->s[snum].pskey = psBeginNum++;
+		p->s[snum].pskey =  (p->partkey-1) * SUPP_PER_PART + psBeginNum++;
 	}
 	// return (psnum+snum);
 }

@@ -51,6 +51,21 @@ typedef struct
     char            comment[C_CMNT_MAX + 1];
     int             clen;
 }               customer_t;
+
+typedef struct 
+{
+    DSS_HUGE            custkey;
+    char            name[C_NAME_LEN + 3];
+    char            address[C_ADDR_MAX + 1];
+    int             alen;
+    DSS_HUGE            nationkey;
+    char            phone[PHONE_LEN + 1];
+    DSS_HUGE            acctbal; /* compression type: scale ｜ 100x */
+    int             mktsegment;  /* compression type: dict | NDV*/
+    char            comment[C_CMNT_MAX + 1];
+    int             clen;
+}           customer_table;
+
 /* customers.c */
 long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c));
 int pr_cust    PROTO((customer_t * c, int mode));

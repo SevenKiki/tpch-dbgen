@@ -243,6 +243,7 @@ pr_line(order_t *o, int mode)
         PR_STR(fp_l, o->l[i].shipinstruct, L_INST_LEN);
         PR_STR(fp_l, o->l[i].shipmode, L_SMODE_LEN);
         PR_VSTR_LAST(fp_l, o->l[i].comment,o->l[i].clen);
+        PR_HUGE(fp_l, &o->l[i].pskey); /*新增字段pskey*/
         PR_END(fp_l);
         }
 
