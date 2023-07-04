@@ -35,6 +35,28 @@
  * and function prototypes
  */
 
+
+typedef struct 
+{
+    int * data;
+    int compType; /*Type of compression 0: without compression | 1: compressed by dict | 2: compressed by scale*/
+    char** dict;
+
+
+}           column_int;
+
+typedef struct 
+{
+    /* data */
+};          column_char;
+
+typedef struct 
+{
+    /* data */
+}           column_DSS_HUGE;
+
+
+
 /*
  * typedefs
  */
@@ -61,9 +83,15 @@ typedef struct
     DSS_HUGE            nationkey;
     char            phone[PHONE_LEN + 1];
     DSS_HUGE            acctbal; /* compression type: scale ｜ 100x */
-    int             mktsegment;  /* compression type: dict | NDV*/
+    int             mktsegment;  /* compression type: dict | NDV = 5*/
     char            comment[C_CMNT_MAX + 1];
     int             clen;
+}           customer_tuple;
+
+typedef struct 
+{
+    customer_tuple * tuples;
+    
 }           customer_table;
 
 /* customers.c */
