@@ -1,4 +1,4 @@
-#
+p_names#
 # $Id: dists.dss,v 1.2 2005/01/03 20:08:58 jms Exp $
 #
 # Revision History
@@ -140,7 +140,7 @@ end msegmnt
 ###
 # names
 ###
-begin p_names
+begin 
 COUNT|4
 CLEANER|1
 SOAP|1

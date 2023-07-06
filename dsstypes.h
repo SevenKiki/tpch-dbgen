@@ -34,13 +34,14 @@
  * general definitions and control information for the DSS data types
  * and function prototypes
  */
-
+# include "string.h"
 
 typedef struct 
 {
     int * data;
     int compType; /*Type of compression 0: without compression | 1: compressed by dict | 2: compressed by scale*/
-    char** dict;
+    // char** dict; 
+    string * dict;
 
 
 }           column_int;
