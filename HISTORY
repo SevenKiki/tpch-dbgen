@@ -415,7 +415,7 @@ Changes as of 2/16/94
    -- added generation of SQL delete statements to match updates
            (Note: updates are still single-threaded; -C is cleared 
            by -U)
-   -- corrected field sizing in dsstypes.h typedefs to match v 6.4
+   -- corrected field sizing in dsstypes.hpp typedefs to match v 6.4
    -- update percentage default set to 1%
 Changes as of 12/3/93
    -- version 1.2
@@ -443,7 +443,7 @@ Changes as of 7/26/93
    -- adjusted scaling rules
    -- added help option to the command line
 Changes as of 2/26/93
-   -- combined all typedefs in one header: dsstypes.h
+   -- combined all typedefs in one header: dsstypes.hpp
    -- combined flat file generation in print.ec
    -- combined typedef population in build.ec
    -- added -P to control rowcnt scaling (P for percentage)

@@ -221,7 +221,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\dsstypes.h"
+				RelativePath=".\dsstypes.hpp"
 				>
 			</File>
 			<File

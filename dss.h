@@ -66,6 +66,7 @@
  */
 #ifndef DSS_H
 #define  DSS_H
+
 #ifdef TPCH
 #define NAME			"TPC-H"
 #endif

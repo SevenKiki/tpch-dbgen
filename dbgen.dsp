@@ -137,7 +137,7 @@ SOURCE=.\dss.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\dsstypes.h
+SOURCE=.\dsstypes.hpp
 # End Source File
 # Begin Source File
 

@@ -44,7 +44,7 @@
 #include <math.h>
 
 #include "dss.h"
-#include "dsstypes.h"
+#include "dsstypes.hpp"
 #include <string.h>
 
 /*
@@ -443,4 +443,16 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
 }
 
 
+int pr_comp_table(comp_table table){
+    // 输出前10行
+    for(int i  = 0 ; i < 10; i++){
+        for(int j = 0 ; j < table.columnCount; j++){
+            if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 )
+                fprintf(stderr, " %d\n", table.columns[j].data[i]);
+            else
+                fprintf(stderr, " %s\n", table.columns[j].data[i])
+        }
+
+    }
+}
 

@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include "config.h"
 #include "dss.h"
-#include "dsstypes.h"
+#include "dsstypes.hpp"
 
 int 
 close_direct(void)

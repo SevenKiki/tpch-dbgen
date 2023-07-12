@@ -89,7 +89,7 @@
 #define TEXT_POOL_SIZE (300 * 1024 * 1024)  /* 300MiB */
 
 #include "dss.h"
-#include "dsstypes.h"
+#include "dsstypes.hpp"
 
 /* 
  * txt_vp() -- 

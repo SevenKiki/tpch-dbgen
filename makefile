@@ -100,7 +100,7 @@
 ################
 ## CHANGE NAME OF ANSI COMPILER HERE
 ################
-CC      = gcc
+CC      = g++
 # Current values for DATABASE are: INFORMIX, DB2, TDAT (Teradata)
 #                                  SQLSERVER, SYBASE, ORACLE
 # Current values for MACHINE are:  ATT, DOS, HP, IBM, ICL, MVS, 
@@ -131,7 +131,7 @@ PROG1 = dbgen$(EXE)
 PROG2 = qgen$(EXE)
 PROGS = $(PROG1) $(PROG2)
 #
-HDR1 = dss.h rnd.h config.h dsstypes.h shared.h bcd2.h rng64.h release.h
+HDR1 = dss.h rnd.h config.h dsstypes.hpp shared.h bcd2.h rng64.h release.h
 HDR2 = tpcd.h permute.h
 HDR  = $(HDR1) $(HDR2)
 #

@@ -1,9 +1,9 @@
 /*
-* $Id: dsstypes.h,v 1.3 2005/10/28 02:57:04 jms Exp $
+* $Id: dsstypes.hpp,v 1.3 2005/10/28 02:57:04 jms Exp $
 *
 * Revision History
 * ===================
-* $Log: dsstypes.h,v $
+* $Log: dsstypes.hpp,v $
 * Revision 1.3  2005/10/28 02:57:04  jms
 * allow for larger names in customer table
 *
@@ -34,28 +34,52 @@
  * general definitions and control information for the DSS data types
  * and function prototypes
  */
-# include "string.h"
+// # include <string>
+# include <string>
 
-typedef struct 
+
+// # include "iostream"
+// # include "string"
+// using namespace std;
+
+typedef struct {
+    
+    std::string *  dictData;   
+    int dictSize;
+}Dict;
+
+typedef struct {
+    std::string columnName;
+    int dataType;       // 原本数据类型：1表示不定长字符串，2表示定长字符串，3表示整型，4表示浮点型
+    int compType;        // 压缩类型： 0表示没有压缩，1表示scale缩放，2表示字典表压缩
+    int scale;          // 缩放倍数， comType==1时，scale才有效
+    Dict *  dict;  // 字符串字典表，每个元素是一个指向字符串的指针
+    void* data;         // 数据指针，根据不同的数据类型使用不同的指针类型
+} comp_column;
+
+typedef struct {
+    comp_column* columns;    // 列数据数组
+    int columnCount;    // 列的数量
+    int rowCount;       // 行的数量
+} comp_table;
+
+/*
+ * typedefs
+ */
+typedef struct
 {
-    int * data;
-    int compType; /*Type of compression 0: without compression | 1: compressed by dict | 2: compressed by scale*/
-    // char** dict; 
-    string * dict;
-
-
-}           column_int;
-
-typedef struct 
-{
-    /* data */
-};          column_char;
-
-typedef struct 
-{
-    /* data */
-}           column_DSS_HUGE;
-
+    DSS_HUGE            custkey;
+    char            name[C_NAME_LEN + 3];
+    char            address[C_ADDR_MAX + 1];
+    int             alen;
+    DSS_HUGE            nation_code;
+    char            phone[PHONE_LEN + 1];
+    DSS_HUGE            acctbal;
+    char            mktsegment[MAXAGG_LEN + 1];
+    int             mktsegment_index;
+    char            comment[C_CMNT_MAX + 1];
+    int             clen;
+}               customer_t;
 
 
 /*
@@ -74,26 +98,6 @@ typedef struct
     char            comment[C_CMNT_MAX + 1];
     int             clen;
 }               customer_t;
-
-typedef struct 
-{
-    DSS_HUGE            custkey;
-    char            name[C_NAME_LEN + 3];
-    char            address[C_ADDR_MAX + 1];
-    int             alen;
-    DSS_HUGE            nationkey;
-    char            phone[PHONE_LEN + 1];
-    DSS_HUGE            acctbal; /* compression type: scale ｜ 100x */
-    int             mktsegment;  /* compression type: dict | NDV = 5*/
-    char            comment[C_CMNT_MAX + 1];
-    int             clen;
-}           customer_tuple;
-
-typedef struct 
-{
-    customer_tuple * tuples;
-    
-}           customer_table;
 
 /* customers.c */
 long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c));

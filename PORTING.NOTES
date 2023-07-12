@@ -49,7 +49,7 @@ generation and include:
         dss.h:
         shared.h: a set of '#defines' for limits, formats and fixed 
                 values 
-        dsstypes.h: structure definitions for each table definition
+        dsstypes.hpp: structure definitions for each table definition
 
 2. Naming Conventions and Variable Usage
 
@@ -65,9 +65,9 @@ conventions detailed here.
 	dss.h -- general defines for the benchmark, including *all*
 	    extern declarations (see below).
 	shared.h -- defines related to the tuple definitions in
-	    dsstypes.h. Isolated to ease automatic processing needed by many
+	    dsstypes.hpp. Isolated to ease automatic processing needed by many
 	    direct load routines (see below).
-	dsstypes.h -- structure definitons and typedef directives to
+	dsstypes.hpp -- structure definitons and typedef directives to
 	    detail the contents of each table's tuples.
 	config.h -- any porting and configuration related defines should
 	    go here, to localize the changes necessary to move the suite

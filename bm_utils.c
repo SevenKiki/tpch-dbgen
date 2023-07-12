@@ -102,7 +102,7 @@
 #endif
 #endif
 /* End of lines added by Chuck McDevitt for WIN32 support */
-#include "dsstypes.h"
+#include "dsstypes.hpp"
 
 
 static char alpha_num[65] =
@@ -231,6 +231,7 @@ pick_str(distribution *s, int c, char *target)
     while (s->list[i].weight < j)
         i++;
     strcpy(target, s->list[i].text);
+
     return(i);
 }
 

@@ -101,7 +101,7 @@
 #endif
 
 #include "dss.h"
-#include "dsstypes.h"
+#include "dsstypes.hpp"
 
 /*
 * Function prototypes
@@ -288,6 +288,8 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 	customer_t cust;
 	part_t part;
 	code_t code;
+
+	comp_table comp_customer;
 	static int completed = 0;
 	DSS_HUGE i;
 
@@ -342,6 +344,12 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			break;
 		case CUST:
 			mk_cust (i, &cust);
+
+			// make compressed table of customer
+			mk_comp_customer(&comp_customer, cust);
+
+			pr_comp_table(comp_customer);
+
 			if (set_seeds == 0)
 				tdefs[tnum].loader(&cust, upd_num);
 			break;
