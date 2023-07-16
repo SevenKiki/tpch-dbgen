@@ -110,7 +110,7 @@ DATABASE= ORACLE
 MACHINE = MAC
 WORKLOAD = TPCH
 #
-CFLAGS	= -g -DDBNAME=\"dss\" -D$(MACHINE) -D$(DATABASE) -D$(WORKLOAD) -DRNG_TEST -D_FILE_OFFSET_BITS=64 
+CFLAGS	= -g -DDBNAME=\"dss\" -D$(MACHINE) -D$(DATABASE) -D$(WORKLOAD) -DRNG_TEST -D_FILE_OFFSET_BITS=64 -std=c++11
 LDFLAGS = -O
 # The OBJ,EXE and LIB macros will need to be changed for compilation under
 #  Windows NT
@@ -174,9 +174,9 @@ JUNK  =
 #
 all: $(PROGS)
 $(PROG1): $(OBJ1) $(SETS) 
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ1) $(LIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -std=c++11 -o $@ $(OBJ1) $(LIBS)
 $(PROG2): permute.h $(OBJ2) 
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(OBJ2) $(LIBS)
+	$(CC) $(CFLAGS) $(LDFLAGS) -std=c++11 -o $@ $(OBJ2) $(LIBS)
 clean:
 	rm -f $(PROGS) $(OBJS) $(JUNK)
 lint:

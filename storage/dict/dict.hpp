@@ -9,7 +9,7 @@ const vector<string> C_MKSEGEMNT = {
     "FURNITURE",
     "HOUSEHOLD",
     "MACHINERY",
-}
+};
 
 // COUNT:96
 const vector<string> P_NAME_COLOR = {
@@ -105,7 +105,7 @@ const vector<string> P_NAME_COLOR = {
     "wheat",
     "white",
     "yellow",
-    }
+    };
 
 // COUNT : 150
 const vector<string> P_TYPE = {
@@ -259,7 +259,7 @@ const vector<string> P_TYPE = {
     "PROMO BRUSHED BRASS",
     "PROMO BRUSHED STEEL",
     "PROMO BRUSHED COPPER",
-}
+};
 
 const vector<string> P_CONTAINER = {
     "SM CASE",
@@ -302,19 +302,18 @@ const vector<string> P_CONTAINER = {
     "WRAP PKG",
     "WRAP CAN",
     "WRAP DRUM",
-​
-}
+};
 
 const vector<string> L_RETURNFLAG = {
     "R","A",
-}
+};
 
 const vector<string> L_SHIPINSTRUCT = {
     "DELIVER IN PERSON",
     "COLLECT COD",
     "TAKE BACK RETURN",
     "NONE",
-}
+};
 
 const vector<string> L_SHIPMODE = {
     "REG AIR",
@@ -324,7 +323,7 @@ const vector<string> L_SHIPMODE = {
     "MAIL",
     "FOB",
     "SHIP",
-}
+};
 
 // COUNT: 5
 const vector<string> O_ORDERPRIORITY = {
@@ -333,4 +332,4 @@ const vector<string> O_ORDERPRIORITY = {
     "3-MEDIUM",
     "4-NOT SPECIFIED",
     "5-LOW",
-}
+};
