@@ -175,8 +175,8 @@ typedef struct
 
 typedef struct
 {
-   char     *name;
-   char     *comment;
+   const char     *name;
+   const char     *comment;
    DSS_HUGE      base;
    int       (*loader) ();
    long      (*gen_seed)();

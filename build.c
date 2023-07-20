@@ -188,13 +188,15 @@ void init_customer_table(comp_table *comp_customer){
     comp_customer->columns[6].data = new string[comp_customer->rowCount];
 }
 
-int mk_comp_customer( comp_table *comp_customer,  customer_t customer){
+int mk_comp_customer( comp_table *comp_customer,  customer_t *customer){
     init_customer_table(comp_customer);
+	int tmp[7]= {0,0,0};
 
     for(long i = 0 ; i < comp_customer->rowCount; i++ ){
         for(int col = 0 ; col < comp_customer->columnCount; col++){
 			if(comp_customer->columns[col].columnName == "custkey"){
-				(int * )comp_customer->columns[col].data[i] = &customer.custkey[i];
+				comp_customer->columns[col].data = &((customer[0].custkey));
+				// comp_customer->columns[col].data = &(tmp[1]);
 			}
 			
             // switch(comp_customer->columns[col].columnName){
@@ -520,7 +522,7 @@ mk_supp(DSS_HUGE index, supplier_t * s)
 
 struct
 {
-	char           *mdes;
+	const char           *mdes;
 	long            days;
 	long            dcnt;
 }               months[] =
