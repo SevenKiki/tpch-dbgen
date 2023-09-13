@@ -173,16 +173,19 @@ typedef struct
 #define DIST_MEMBER(d, i)	((set_member *)((d)->list + i))->text
 #define DIST_PERMUTE(d, i)	(d->permute[i])
 
-typedef struct
+// template<typename T>
+struct tdef
 {
    const char     *name;
    const char     *comment;
    DSS_HUGE      base;
-   int       (*loader) ();
-   long      (*gen_seed)();
+   int       (*loader) (void * ,int);
+    // int       (*loader) ();
+    long (*gen_seed) (int ,long);
+//    long      (*gen_seed)(); 
    int       child; /*会附带生成的表*/
    DSS_HUGE vtotal;
-}         tdef;
+}; 
 
 typedef struct SEED_T {
 	long table;
