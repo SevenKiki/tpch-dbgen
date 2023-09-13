@@ -54,8 +54,8 @@
 /* main driver for dss banchmark */
 
 #define DECLARER				/* EXTERN references get defined here */
-#define NO_FUNC (int (*) ()) NULL	/* to clean up tdefs */
-#define NO_LFUNC (long (*) ()) NULL		/* to clean up tdefs */
+#define NO_FUNC (int (*)) NULL	/* to clean up tdefs */
+#define NO_LFUNC (long (*)) NULL		/* to clean up tdefs */
 
 #include "config.h"
 #include "release.h"
@@ -153,16 +153,26 @@ static int bTableSet = 0;
 /*
 * flat file print functions; used with -F(lat) option
 */
-int pr_cust (customer_t * c, int mode);
-int pr_line (order_t * o, int mode);
-int pr_order (order_t * o, int mode);
-int pr_part (part_t * p, int mode);
-int pr_psupp (part_t * p, int mode);
-int pr_supp (supplier_t * s, int mode);
-int pr_order_line (order_t * o, int mode);
-int pr_part_psupp (part_t * p, int mode);
-int pr_nation (code_t * c, int mode);
-int pr_region (code_t * c, int mode);
+// int pr_cust (customer_t * c, int mode);
+// int pr_line (order_t * o, int mode);
+// int pr_order (order_t * o, int mode);
+// int pr_part (part_t * p, int mode);
+// int pr_psupp (part_t * p, int mode);
+// int pr_supp (supplier_t * s, int mode);
+// int pr_order_line (order_t * o, int mode);
+// int pr_part_psupp (part_t * p, int mode);
+// int pr_nation (code_t * c, int mode);
+// int pr_region (code_t * c, int mode);
+int pr_cust (void * c, int mode);
+int pr_line (void * o, int mode);
+int pr_order (void * o, int mode);
+int pr_part (void * p, int mode);
+int pr_psupp (void * p, int mode);
+int pr_supp (void * s, int mode);
+int pr_order_line (void * o, int mode);
+int pr_part_psupp (void * p, int mode);
+int pr_nation (void * c, int mode);
+int pr_region (void * c, int mode);
 
 /*
 * seed generation functions; used with '-O s' option
@@ -194,10 +204,12 @@ tdef tdefs[] =
 		pr_order_line, sd_order, LINE, 0},
 	{"part.tbl", "part/partsupplier tables", 200000,
 		pr_part_psupp, sd_part, PSUPP, 0},
+	// TODO:
 	{"nation.tbl", "nation table", NATIONS_MAX,
-		pr_nation, NO_LFUNC, NONE, 0},
+		pr_nation, sd_part, NONE, 0},
+	// TODO
 	{"region.tbl", "region table", NATIONS_MAX,
-		pr_region, NO_LFUNC, NONE, 0},
+		pr_region, sd_part, NONE, 0},
 };
 
 /*
@@ -335,7 +347,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 				}
 
 			if (set_seeds == 0)
-				tdefs[tnum].loader(&o, upd_num);
+				tdefs[tnum].loader((void*)&o, upd_num);
 			break;
 		case SUPP:
 			mk_supp (i, &supp);
@@ -346,7 +358,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			mk_cust (i, &cust);
 
 			// make compressed table of customer
-			mk_comp_customer(&comp_customer, cust);
+			mk_comp_customer(&comp_customer, &cust);
 
 			pr_comp_table(comp_customer);
 
@@ -362,13 +374,15 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			break;
 		case NATION:
 			mk_nation (i, &code);
-			if (set_seeds == 0)
-				tdefs[tnum].loader(&code, 0);
+			// TODO
+			// if (set_seeds == 0)
+			// 	tdefs[tnum].loader(&code, 0);
 			break;
 		case REGION:
 			mk_region (i, &code);
-			if (set_seeds == 0)
-				tdefs[tnum].loader(&code, 0);
+			// TODO
+			// if (set_seeds == 0)
+			// 	tdefs[tnum].loader(&code, 0);
 			break;
 		}
 		row_stop(tnum);

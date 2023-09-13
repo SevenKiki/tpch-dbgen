@@ -85,6 +85,8 @@ typedef struct
 long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c));
 int pr_cust    PROTO((customer_t * c, int mode));
 int ld_cust    PROTO((customer_t * c, int mode));
+int mk_comp_customer    PROTO((comp_table *comp_c,  customer_t *c));
+int pr_comp_table   PROTO((comp_table table));
 
 typedef struct/*Primary Key:ORDERKEY, LINENUMBER*/
 {

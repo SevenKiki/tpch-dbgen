@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "__availability": "c"
+        "__availability": "c",
+        "dss.h": "c"
     }
 }

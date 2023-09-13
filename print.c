@@ -267,12 +267,14 @@ pr_order_line(order_t *o, int mode)
  * print the given part
  */
 int
-pr_part(part_t *part, int mode)
+pr_part(void * part_tmp, int mode)
 {
 static FILE *p_fp = NULL;
 
     if (p_fp == NULL)
         p_fp = print_prep(PART, 0);
+    
+    part_t * part = (part_t *) part_tmp;
 
    PR_STRT(p_fp);
    PR_HUGE(p_fp, &part->partkey);
@@ -293,10 +295,11 @@ static FILE *p_fp = NULL;
  * print the given part's suppliers
  */
 int
-pr_psupp(part_t *part, int mode)
+pr_psupp(void *part_tmp, int mode)
 {
     static FILE *ps_fp = NULL;
     long      i;
+    part_t * part = (part_t *) part_tmp;
 
     if (ps_fp == NULL)
         ps_fp = print_prep(PSUPP, mode);
@@ -397,7 +400,7 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
     static int  last_num = 0;
     static FILE *dfp = NULL;
     DSS_HUGE child = -1;
-    DSS_HUGE start, last, new;
+    DSS_HUGE start, last, new_;
 
 	static DSS_HUGE rows_per_segment=0;
 	static DSS_HUGE rows_this_segment=0;
@@ -417,7 +420,7 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
     last = start - 1;
     for (child=min; cnt > 0; child++, cnt--)
 	{
-		new = MK_SPARSE(child, num/ (10000 / UPD_PCT));
+		new_ = MK_SPARSE(child, num/ (10000 / UPD_PCT));
 		if (delete_segments)
 		{
 
@@ -433,10 +436,10 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
 			}
 		}
 		PR_STRT(dfp);
-		PR_HUGE(dfp, &new);
+		PR_HUGE(dfp, &new_);
 		PR_END(dfp);
-		start = new;
-		last = new;
+		start = new_;
+		last = new_;
 	}
     
     return(0);
@@ -447,10 +450,14 @@ int pr_comp_table(comp_table table){
     // 输出前10行
     for(int i  = 0 ; i < 10; i++){
         for(int j = 0 ; j < table.columnCount; j++){
-            if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 )
-                fprintf(stderr, " %d\n", table.columns[j].data[i]);
-            else
-                fprintf(stderr, " %s\n", table.columns[j].data[i])
+            if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 ){
+                int* data = (int*)table.columns[j].data;
+                fprintf(stderr, " %d\n", data[i]);   
+            }
+            // else{
+            //     std::string * data = (std::string *) table.columns[j].data;
+            //     fprintf(stderr, " %s\n", data[i]);
+            // }
         }
 
     }

@@ -178,8 +178,8 @@ typedef struct
    const char     *name;
    const char     *comment;
    DSS_HUGE      base;
-   int       (*loader) ();
-   long      (*gen_seed)();
+   int       (*loader) (void *, int);
+   long      (*gen_seed)(int ,long);
    int       child; /*会附带生成的表*/
    DSS_HUGE vtotal;
 }         tdef;
@@ -197,7 +197,7 @@ typedef struct SEED_T {
 
 #if defined(__STDC__)
 #define PROTO(s) s
-#else
+#else  
 #define PROTO(s) ()
 #endif
 
