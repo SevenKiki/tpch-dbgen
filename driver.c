@@ -186,6 +186,10 @@ long sd_supp (int child, DSS_HUGE skip_count);
 long sd_order_line (int child, DSS_HUGE skip_count);
 long sd_part_psupp (int child, DSS_HUGE skip_count);
 
+// tdef part_tdef<part_t> ={
+// 	"part.tbl", "part table", 200000,
+// 		pr_part, sd_part, PSUPP, 0
+// }
 tdef tdefs[] =
 {
 	{"part.tbl", "part table", 200000,

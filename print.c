@@ -267,14 +267,14 @@ pr_order_line(order_t *o, int mode)
  * print the given part
  */
 int
-pr_part(void * part_tmp, int mode)
+pr_part(void *part_void, int mode)
 {
 static FILE *p_fp = NULL;
 
     if (p_fp == NULL)
         p_fp = print_prep(PART, 0);
     
-    part_t * part = (part_t *) part_tmp;
+    part_t part = (part_t*) part_void;
 
    PR_STRT(p_fp);
    PR_HUGE(p_fp, &part->partkey);
