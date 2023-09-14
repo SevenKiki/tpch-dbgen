@@ -151,12 +151,13 @@ dbg_print(int format, FILE *target, void *data, int len, int sep)
 }
 
 int
-pr_cust(customer_t *c, int mode)
+pr_cust(void *c_void, int mode)
 {
 static FILE *fp = NULL;
         
    if (fp == NULL)
         fp = print_prep(CUST, 0);
+    customer_t *c = (customer_t *) c_void;
 
    PR_STRT(fp);
    PR_HUGE(fp, &c->custkey);
@@ -179,10 +180,11 @@ static FILE *fp = NULL;
  * print the numbered order 
  */
 int
-pr_order(order_t *o, int mode)
+pr_order(void *o_void, int mode)
 {
     static FILE *fp_o = NULL;
     static int last_mode = 0;
+    order_t *o = (order_t *) o_void;
         
     if (fp_o == NULL || mode != last_mode)
         {
@@ -210,11 +212,12 @@ pr_order(order_t *o, int mode)
  * print an order's lineitems
  */
 int
-pr_line(order_t *o, int mode)
+pr_line(void *o_void, int mode)
 {
     static FILE *fp_l = NULL;
     static int last_mode = 0;
     long      i;
+    order_t *o = (order_t *) o_void;
         
     if (fp_l == NULL || mode != last_mode)
         {
@@ -254,8 +257,9 @@ pr_line(order_t *o, int mode)
  * print the numbered order *and* its associated lineitems
  */
 int
-pr_order_line(order_t *o, int mode)
+pr_order_line(void *o_void, int mode)
 {
+    order_t *o = (order_t * )o_void;
     tdefs[ORDER].name = tdefs[ORDER_LINE].name;
     pr_order(o, mode);
     pr_line(o, mode);
@@ -267,14 +271,14 @@ pr_order_line(order_t *o, int mode)
  * print the given part
  */
 int
-pr_part(void *part_void, int mode)
+pr_part(void * part_void, int mode)
 {
 static FILE *p_fp = NULL;
 
     if (p_fp == NULL)
         p_fp = print_prep(PART, 0);
     
-    part_t part = (part_t*) part_void;
+    part_t * part = (part_t *) part_void;
 
    PR_STRT(p_fp);
    PR_HUGE(p_fp, &part->partkey);
@@ -295,11 +299,11 @@ static FILE *p_fp = NULL;
  * print the given part's suppliers
  */
 int
-pr_psupp(void *part_tmp, int mode)
+pr_psupp(void *part_void, int mode)
 {
     static FILE *ps_fp = NULL;
     long      i;
-    part_t * part = (part_t *) part_tmp;
+    part_t *part = (part_t *)part_void;
 
     if (ps_fp == NULL)
         ps_fp = print_prep(PSUPP, mode);
@@ -323,8 +327,9 @@ pr_psupp(void *part_tmp, int mode)
  * print the given part *and* its suppliers
  */
 int
-pr_part_psupp(part_t *part, int mode)
+pr_part_psupp(void * part_void, int mode)
 {
+    part_t *part = (part_t * )part_void;
     tdefs[PART].name = tdefs[PART_PSUPP].name;
     pr_part(part, mode);
     pr_psupp(part, mode);
@@ -400,7 +405,7 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
     static int  last_num = 0;
     static FILE *dfp = NULL;
     DSS_HUGE child = -1;
-    DSS_HUGE start, last, new_;
+    DSS_HUGE start, last, _new;
 
 	static DSS_HUGE rows_per_segment=0;
 	static DSS_HUGE rows_this_segment=0;
@@ -420,7 +425,7 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
     last = start - 1;
     for (child=min; cnt > 0; child++, cnt--)
 	{
-		new_ = MK_SPARSE(child, num/ (10000 / UPD_PCT));
+		_new = MK_SPARSE(child, num/ (10000 / UPD_PCT));
 		if (delete_segments)
 		{
 
@@ -436,10 +441,10 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
 			}
 		}
 		PR_STRT(dfp);
-		PR_HUGE(dfp, &new_);
+		PR_HUGE(dfp, &_new);
 		PR_END(dfp);
-		start = new_;
-		last = new_;
+		start = _new;
+		last = _new;
 	}
     
     return(0);
@@ -451,13 +456,13 @@ int pr_comp_table(comp_table table){
     for(int i  = 0 ; i < 10; i++){
         for(int j = 0 ; j < table.columnCount; j++){
             if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 ){
-                int* data = (int*)table.columns[j].data;
-                fprintf(stderr, " %d\n", data[i]);   
+                int *data = (int * )table.columns[j].data;
+                fprintf(stderr, " %d\n", data[i]);
             }
-            // else{
-            //     std::string * data = (std::string *) table.columns[j].data;
-            //     fprintf(stderr, " %s\n", data[i]);
-            // }
+
+                
+            // else
+            //     fprintf(stderr, " %s\n", table.columns[j].data[i])
         }
 
     }
