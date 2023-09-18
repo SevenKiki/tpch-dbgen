@@ -157,8 +157,8 @@ char *cptr,
     qnum = atoi(qtag);
     if (line == NULL)
         {
-        line = malloc(BUFSIZ);
-        qpath = malloc(BUFSIZ);
+        line = (char *)malloc(BUFSIZ);
+        qpath = (char *)malloc(BUFSIZ);
         MALLOC_CHECK(line);
         MALLOC_CHECK(qpath);
         }
@@ -316,13 +316,13 @@ process_options(int cnt, char **args)
                 exit(0);
                 break;
             case 'i':   /* set stream initialization file name */
-                ifile = malloc((int)strlen(optarg) + 1);
+                ifile = (char *)malloc((int)strlen(optarg) + 1);
                 MALLOC_CHECK(ifile);
                 strcpy(ifile, optarg);
                 flags |= INIT;
                 break;
             case 'l':   /* log parameter usages */
-                lfile = malloc((int)strlen(optarg) + 1);
+                lfile =(char *) malloc((int)strlen(optarg) + 1);
                 MALLOC_CHECK(lfile);
                 strcpy(lfile, optarg);
                 flags |= LOG;
@@ -331,13 +331,13 @@ process_options(int cnt, char **args)
                 flags |= DFLT_NUM;
                 break;
             case 'n':   /* set database name */
-                db_name = malloc((int)strlen(optarg) + 1);
+                db_name = (char *)malloc((int)strlen(optarg) + 1);
                 MALLOC_CHECK(db_name);
                 strcpy(db_name, optarg);
                 flags |= DBASE;
                 break;
             case 'o':   /* set the output path */
-                osuff = malloc((int)strlen(optarg) + 1);
+                osuff = (char *)malloc((int)strlen(optarg) + 1);
                 MALLOC_CHECK(osuff);
                 strcpy(osuff, optarg);
                 flags |=OUTPUT;
@@ -359,7 +359,7 @@ process_options(int cnt, char **args)
 						"Data set integrity is not guaranteed.\n");
                 break;
             case 't':   /* set termination file name */
-                tfile = malloc((int)strlen(optarg) + 1);
+                tfile = (char *)malloc((int)strlen(optarg) + 1);
                 MALLOC_CHECK(tfile);
                 strcpy(tfile, optarg);
                 flags |= TERMINATE;

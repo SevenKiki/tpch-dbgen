@@ -195,14 +195,17 @@ int mk_comp_customer( comp_table *comp_customer,  customer_t *customer){
     for(long i = 0 ; i < comp_customer->rowCount; i++ ){
         for(int col = 0 ; col < comp_customer->columnCount; col++){
 			if(comp_customer->columns[col].columnName == "custkey"){
-				comp_customer->columns[col].data = &((customer[0].custkey));
+				int * data = static_cast<int*>(comp_customer->columns[col].data);
+				data[i] = customer[i].custkey;
+				comp_customer->columns[col].data = data;
+
 				// comp_customer->columns[col].data = &(tmp[1]);
 			}
 			
             // switch(comp_customer->columns[col].columnName){
 
-            //     case "custkey":
-            //         (int *)comp_customer->columns[col].data[i] = customer.custkey[i];
+            //     case 'custkey':
+            //         comp_customer->columns[col].data[i] = &(customer.custkey[i]);
             //         break;
 
             //     case "name":
@@ -233,8 +236,7 @@ int mk_comp_customer( comp_table *comp_customer,  customer_t *customer){
             //         (string *)comp_customer->columns[col].data[i] = customer.comment[i];
             //         break; 
             // }
-            
-
+    
         }
     }
 

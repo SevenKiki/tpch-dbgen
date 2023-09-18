@@ -338,12 +338,13 @@ pr_part_psupp(void * part_void, int mode)
 }
 
 int
-pr_supp(supplier_t *supp, int mode)
+pr_supp(void *supp_void, int mode)
 {
 static FILE *fp = NULL;
         
    if (fp == NULL)
         fp = print_prep(SUPP, mode);
+    supplier_t * supp = (supplier_t *) supp_void;
 
    PR_STRT(fp);
    PR_HUGE(fp, &supp->suppkey);
@@ -359,9 +360,10 @@ static FILE *fp = NULL;
 }
 
 int
-pr_nation(code_t *c, int mode)
+pr_nation(void * c_void, int mode)
 {
 static FILE *fp = NULL;
+code_t* c = (code_t *) c_void;
         
    if (fp == NULL)
         fp = print_prep(NATION, mode);
@@ -377,13 +379,13 @@ static FILE *fp = NULL;
 }
 
 int
-pr_region(code_t *c, int mode)
+pr_region(void *c_void, int mode)
 {
 static FILE *fp = NULL;
         
    if (fp == NULL)
         fp = print_prep(REGION, mode);
-
+code_t* c = (code_t *) c_void;
    PR_STRT(fp);
    PR_HUGE(fp, &c->code);
    PR_STR(fp, c->text, REGION_LEN);
@@ -452,6 +454,8 @@ pr_drange(int tbl, DSS_HUGE min, DSS_HUGE cnt, long num)
 
 
 int pr_comp_table(comp_table table){
+
+    fprintf(stderr, " table column count %d\n", table.columnCount);
     // 输出前10行
     for(int i  = 0 ; i < 10; i++){
         for(int j = 0 ; j < table.columnCount; j++){
@@ -459,8 +463,6 @@ int pr_comp_table(comp_table table){
                 int *data = (int * )table.columns[j].data;
                 fprintf(stderr, " %d\n", data[i]);
             }
-
-                
             // else
             //     fprintf(stderr, " %s\n", table.columns[j].data[i])
         }

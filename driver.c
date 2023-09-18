@@ -208,10 +208,8 @@ tdef tdefs[] =
 		pr_order_line, sd_order, LINE, 0},
 	{"part.tbl", "part/partsupplier tables", 200000,
 		pr_part_psupp, sd_part, PSUPP, 0},
-	// TODO:
 	{"nation.tbl", "nation table", NATIONS_MAX,
 		pr_nation, sd_part, NONE, 0},
-	// TODO
 	{"region.tbl", "region table", NATIONS_MAX,
 		pr_region, sd_part, NONE, 0},
 };
@@ -234,7 +232,7 @@ child_table:
 			printf ("Enter new destination for %s data: ",
 				tdefs[i].name);
 			if (fgets (line, sizeof (line), stdin) == NULL)
-				return (-1);;
+				return (-1);
 			if ((new_name = strchr (line, '\n')) != NULL)
 				*new_name = '\0';
 			if ((int)strlen (line) == 0)
@@ -263,6 +261,7 @@ child_table:
 void
 load_dists (void)
 {
+
 	read_dist (env_config (DIST_TAG, DIST_DFLT), "p_cntr", &p_cntr_set);
 	read_dist (env_config (DIST_TAG, DIST_DFLT), "colors", &colors);
 	read_dist (env_config (DIST_TAG, DIST_DFLT), "p_types", &p_types_set);
@@ -740,7 +739,9 @@ main (int ac, char **av)
 		fprintf (stderr, "Copyright %s %s\n", TPC, C_DATES);
 		}
 	
+	fprintf(stderr, "kk log: load_dists \n");
 	load_dists ();
+	// fprintf(stderr, "kk log: load_dists \n");
 #ifdef RNG_TEST
 	for (i=0; i <= MAX_STREAM; i++)
 		Seed[i].nCalls = 0;
@@ -748,6 +749,7 @@ main (int ac, char **av)
 	/* have to do this after init */
 	tdefs[NATION].base = nations.count;
 	tdefs[REGION].base = regions.count;
+	fprintf(stderr, "kk log: tdefs nation base: %ld", tdefs[NATION].base);
 	
 	/* 
 	* updates are never parallelized 
