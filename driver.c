@@ -294,6 +294,7 @@ load_dists (void)
 
 /*
 * generate a particular table
+gen_tbl (ORDER_LINE, minrow, rowcnt, upd_num + 1)
 */
 void
 gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
@@ -305,6 +306,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 	code_t code;
 
 	comp_table comp_customer;
+	init_customer_table(&comp_customer);
 	static int completed = 0;
 	DSS_HUGE i;
 
@@ -353,24 +355,23 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 				tdefs[tnum].loader((void*)&o, upd_num);
 			break;
 		case SUPP:
-			fprintf (stderr, "supp tabel gen begin.\n");
+			// fprintf (stderr, "supp tabel gen begin i= %d.\n", i);
 			mk_supp (i, &supp);
 			if (set_seeds == 0)
 				tdefs[tnum].loader(&supp, upd_num);
 			break;
 		case CUST:
-			fprintf (stderr, "cust tabel gen begin.\n");
+			// fprintf (stderr, "cust tabel gen begin.\n");
 			mk_cust (i, &cust);
-			fprintf (stderr, "cust tabel gen end.\n");
+			// fprintf (stderr, "cust tabel gen end.\n");
 
 			// make compressed table of customer
-			mk_comp_customer(&comp_customer, &cust);
+			mk_comp_customer(i, &comp_customer, &cust);
 			fprintf (stderr, "cust compressed tabel gen end.\n");
 
+			// if (set_seeds == 0)
+			// 	tdefs[tnum].loader(&cust, upd_num);
 			pr_comp_table(comp_customer);
-
-			if (set_seeds == 0)
-				tdefs[tnum].loader(&cust, upd_num);
 			break;
 		case PSUPP:
 		case PART:
@@ -822,7 +823,7 @@ main (int ac, char **av)
 				else
 					rowcnt = tdefs[i].base;
 				if (verbose > 0)
-					fprintf (stderr, "Generating data for %s", tdefs[i].comment);
+					fprintf (stderr, "Generating data for %s \n", tdefs[i].comment);
 				gen_tbl ((int)i, minrow, rowcnt, upd_num);
 				if (verbose > 0)
 					fprintf (stderr, "done.\n");

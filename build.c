@@ -133,6 +133,7 @@ mk_cust(DSS_HUGE n_cust, customer_t * c)
 
 
 void init_customer_table(comp_table *comp_customer){
+	fprintf(stderr, "init customer compressed table \n");
     comp_customer->columnCount = 8;
     comp_customer->rowCount = 150000; // SF = 1
     comp_customer->columns = new comp_column[comp_customer->columnCount];
@@ -188,24 +189,49 @@ void init_customer_table(comp_table *comp_customer){
     comp_customer->columns[6].data = new string[comp_customer->rowCount];
 }
 
-int mk_comp_customer( comp_table *comp_customer,  customer_t *customer){
-    init_customer_table(comp_customer);
+int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *customer){
+    // if(n_cust == 0 ) init_customer_table(comp_customer);
     for(long i = 0 ; i < comp_customer->rowCount; i++ ){
         for(int col = 0 ; col < comp_customer->columnCount; col++){
 			if(comp_customer->columns[col].columnName == "custkey"){
 				// int * data = static_cast<int*>(comp_customer->columns[col].data);
 				// long data= customer[i].custkey;
-				fprintf(stderr, "i = %ld \n", i);
+				// fprintf(stderr, "i = %ld \n", i);
 				long * custkey_data = (long *)comp_customer->columns[col].data;
-				// fprintf(stderr, "222\n");
 				custkey_data[i] = customer[i].custkey;
-				// fprintf(stderr, "333\n");
 				comp_customer->columns[col].data = custkey_data;
-				fprintf(stderr, "i = %ld \n", *((long *)comp_customer->columns[col].data) + i);
+				// fprintf(stderr, "i = %ld \n", *((long *)comp_customer->columns[col].data) + i);
 				// (long *)comp_customer->columns[col].data = &(customer[i].custkey);
 				// long * long_data = &(customer[i].custkey);
 				// fprintf(stderr, "comment error: O%ld\n", *long_data);
 				// comp_customer->columns[col].data = &(tmp[1]);
+			}
+			else if(comp_customer->columns[col].columnName == "name"){
+
+
+			}
+			else if(comp_customer->columns[col].columnName == "address"){
+
+			}
+			else if(comp_customer->columns[col].columnName == "nationkey"){
+				int * custkey_data = (int *)comp_customer->columns[col].data;
+				custkey_data[i] = customer[i].nationkey;
+				comp_customer->columns[col].data = custkey_data;
+			}
+			else if(comp_customer->columns[col].columnName == "phone"){
+
+			}
+			else if(comp_customer->columns[col].columnName == "acctbal"){
+				double * custkey_data = (double *)comp_customer->columns[col].data;
+				custkey_data[i] = customer[i].acctbal;
+				comp_customer->columns[col].data = custkey_data;
+
+			}
+			else if(comp_customer->columns[col].columnName == "mktsegment"){
+
+			}
+			else if(comp_customer->columns[col].columnName == "comment"){
+
 			}
 			
             // switch(comp_customer->columns[col].columnName){
