@@ -353,15 +353,19 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 				tdefs[tnum].loader((void*)&o, upd_num);
 			break;
 		case SUPP:
+			fprintf (stderr, "supp tabel gen begin.\n");
 			mk_supp (i, &supp);
 			if (set_seeds == 0)
 				tdefs[tnum].loader(&supp, upd_num);
 			break;
 		case CUST:
+			fprintf (stderr, "cust tabel gen begin.\n");
 			mk_cust (i, &cust);
+			fprintf (stderr, "cust tabel gen end.\n");
 
 			// make compressed table of customer
 			mk_comp_customer(&comp_customer, &cust);
+			fprintf (stderr, "cust compressed tabel gen end.\n");
 
 			pr_comp_table(comp_customer);
 
@@ -749,7 +753,7 @@ main (int ac, char **av)
 	/* have to do this after init */
 	tdefs[NATION].base = nations.count;
 	tdefs[REGION].base = regions.count;
-	fprintf(stderr, "kk log: tdefs nation base: %ld", tdefs[NATION].base);
+	fprintf(stderr, "kk log: tdefs nation base: %ld\n", tdefs[NATION].base);
 	
 	/* 
 	* updates are never parallelized 

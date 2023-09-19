@@ -141,7 +141,7 @@ void init_customer_table(comp_table *comp_customer){
     comp_customer->columns[0].columnName = "custkey";
     comp_customer->columns[0].dataType = 3;
     comp_customer->columns[0].compType = 0;
-    comp_customer->columns[0].data = new int[comp_customer->rowCount];
+    comp_customer->columns[0].data = new long[comp_customer->rowCount];
 
     // name
     comp_customer->columns[1].columnName = "name";
@@ -190,15 +190,21 @@ void init_customer_table(comp_table *comp_customer){
 
 int mk_comp_customer( comp_table *comp_customer,  customer_t *customer){
     init_customer_table(comp_customer);
-	int tmp[7]= {0,0,0};
-
     for(long i = 0 ; i < comp_customer->rowCount; i++ ){
         for(int col = 0 ; col < comp_customer->columnCount; col++){
 			if(comp_customer->columns[col].columnName == "custkey"){
-				int * data = static_cast<int*>(comp_customer->columns[col].data);
-				data[i] = customer[i].custkey;
-				comp_customer->columns[col].data = data;
-
+				// int * data = static_cast<int*>(comp_customer->columns[col].data);
+				// long data= customer[i].custkey;
+				fprintf(stderr, "i = %ld \n", i);
+				long * custkey_data = (long *)comp_customer->columns[col].data;
+				// fprintf(stderr, "222\n");
+				custkey_data[i] = customer[i].custkey;
+				// fprintf(stderr, "333\n");
+				comp_customer->columns[col].data = custkey_data;
+				fprintf(stderr, "i = %ld \n", *((long *)comp_customer->columns[col].data) + i);
+				// (long *)comp_customer->columns[col].data = &(customer[i].custkey);
+				// long * long_data = &(customer[i].custkey);
+				// fprintf(stderr, "comment error: O%ld\n", *long_data);
 				// comp_customer->columns[col].data = &(tmp[1]);
 			}
 			
