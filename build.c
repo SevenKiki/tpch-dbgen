@@ -214,17 +214,17 @@ int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *c
 
 			}
 			else if(comp_customer->columns[col].columnName == "nationkey"){
-				int * custkey_data = (int *)comp_customer->columns[col].data;
-				custkey_data[i] = customer[i].nationkey;
-				comp_customer->columns[col].data = custkey_data;
+				// int * custkey_data = (int *)comp_customer->columns[col].data;
+				// custkey_data[i] = customer[i].nationkey;
+				// comp_customer->columns[col].data = custkey_data;
 			}
 			else if(comp_customer->columns[col].columnName == "phone"){
 
 			}
 			else if(comp_customer->columns[col].columnName == "acctbal"){
-				double * custkey_data = (double *)comp_customer->columns[col].data;
-				custkey_data[i] = customer[i].acctbal;
-				comp_customer->columns[col].data = custkey_data;
+				// double * custkey_data = (double *)comp_customer->columns[col].data;
+				// custkey_data[i] = customer[i].acctbal;
+				// comp_customer->columns[col].data = custkey_data;
 
 			}
 			else if(comp_customer->columns[col].columnName == "mktsegment"){

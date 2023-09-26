@@ -367,7 +367,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 
 			// make compressed table of customer
 			mk_comp_customer(i, &comp_customer, &cust);
-			fprintf (stderr, "cust compressed tabel gen end.\n");
+			// fprintf (stderr, "cust compressed tabel gen end.\n");
 
 			// if (set_seeds == 0)
 			// 	tdefs[tnum].loader(&cust, upd_num);
