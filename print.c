@@ -385,7 +385,7 @@ static FILE *fp = NULL;
         
    if (fp == NULL)
         fp = print_prep(REGION, mode);
-code_t* c = (code_t *) c_void;
+    code_t* c = (code_t *) c_void;
    PR_STRT(fp);
    PR_HUGE(fp, &c->code);
    PR_STR(fp, c->text, REGION_LEN);
@@ -459,10 +459,10 @@ int pr_comp_table(comp_table table){
     // 输出前10行
     for(int i  = 0 ; i < 10; i++){
         for(int j = 0 ; j < table.columnCount; j++){
-            if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 ){
+            // if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 ){
                 int *data = (int * )table.columns[j].data;
-                fprintf(stderr, " %d\n", data[i]);
-            }
+                fprintf(stderr, "%d %d\n", i,data[i]);
+            // }
             // else
             //     fprintf(stderr, " %s\n", table.columns[j].data[i])
         }

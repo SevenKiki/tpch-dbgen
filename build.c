@@ -139,137 +139,170 @@ void init_customer_table(comp_table *comp_customer){
     comp_customer->columns = new comp_column[comp_customer->columnCount];
 
     // custkey
-    comp_customer->columns[0].columnName = "custkey";
-    comp_customer->columns[0].dataType = 3;
-    comp_customer->columns[0].compType = 0;
+    // comp_customer->columns[0].columnName = "custkey";
+    // comp_customer->columns[0].dataType = 3;
+    // comp_customer->columns[0].compType = 0;
     comp_customer->columns[0].data = new long[comp_customer->rowCount];
 
     // name
-    comp_customer->columns[1].columnName = "name";
-    comp_customer->columns[1].dataType = 2;
-    comp_customer->columns[1].compType = 0;
+    // comp_customer->columns[1].columnName = "name";
+    // comp_customer->columns[1].dataType = 2;
+    // comp_customer->columns[1].compType = 0;
     comp_customer->columns[1].data = new string[comp_customer->rowCount];
 
     //address
-    comp_customer->columns[2].columnName = "address";
-    comp_customer->columns[2].dataType = 2;
-    comp_customer->columns[2].compType = 0;
+    // comp_customer->columns[2].columnName = "address";
+    // comp_customer->columns[2].dataType = 2;
+    // comp_customer->columns[2].compType = 0;
     comp_customer->columns[2].data = new string[comp_customer->rowCount];
 
     //nationkey
-    comp_customer->columns[3].columnName = "nationkey";
-    comp_customer->columns[3].dataType = 3;
-    comp_customer->columns[3].compType = 0;
+    // comp_customer->columns[3].columnName = "nationkey";
+    // comp_customer->columns[3].dataType = 3;
+    // comp_customer->columns[3].compType = 0;
     comp_customer->columns[3].data = new int[comp_customer->rowCount];
 
     //phone
-    comp_customer->columns[4].columnName = "phone";
-    comp_customer->columns[4].dataType = 2;
-    comp_customer->columns[4].compType = 0;
+    // comp_customer->columns[4].columnName = "phone";
+    // comp_customer->columns[4].dataType = 2;
+    // comp_customer->columns[4].compType = 0;
     comp_customer->columns[4].data = new string[comp_customer->rowCount];
 
     //acctbal
-    comp_customer->columns[5].columnName = "acctbal";
-    comp_customer->columns[5].dataType = 4;
-    comp_customer->columns[5].compType = 1;
-    comp_customer->columns[5].scale = 100;
+    // comp_customer->columns[5].columnName = "acctbal";
+    // comp_customer->columns[5].dataType = 4;
+    // comp_customer->columns[5].compType = 1;
+    // comp_customer->columns[5].scale = 100;
     comp_customer->columns[5].data = new int[comp_customer->rowCount];
 
     //mktsegment
-    comp_customer->columns[6].columnName = "mktsegment";
-    comp_customer->columns[6].dataType = 2;
-    comp_customer->columns[6].compType = 2;
+    // comp_customer->columns[6].columnName = "mktsegment";
+    // comp_customer->columns[6].dataType = 2;
+    // comp_customer->columns[6].compType = 2;
     comp_customer->columns[6].data = new int[comp_customer->rowCount];
     // comp_customer.columns[6].dict = C_MKSEGEMNT;
 
     // comment 
-    comp_customer->columns[7].columnName = "comment";
-    comp_customer->columns[7].dataType = 1;
-    comp_customer->columns[7].compType = 0;
+    // comp_customer->columns[7].columnName = "comment";
+    // comp_customer->columns[7].dataType = 1;
+    // comp_customer->columns[7].compType = 0;
     comp_customer->columns[6].data = new string[comp_customer->rowCount];
 }
 
 int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *customer){
     // if(n_cust == 0 ) init_customer_table(comp_customer);
-    for(long i = 0 ; i < comp_customer->rowCount; i++ ){
-        for(int col = 0 ; col < comp_customer->columnCount; col++){
-			if(comp_customer->columns[col].columnName == "custkey"){
-				// int * data = static_cast<int*>(comp_customer->columns[col].data);
-				// long data= customer[i].custkey;
-				// fprintf(stderr, "i = %ld \n", i);
-				long * custkey_data = (long *)comp_customer->columns[col].data;
-				custkey_data[i] = customer[i].custkey;
-				comp_customer->columns[col].data = custkey_data;
-				// fprintf(stderr, "i = %ld \n", *((long *)comp_customer->columns[col].data) + i);
-				// (long *)comp_customer->columns[col].data = &(customer[i].custkey);
-				// long * long_data = &(customer[i].custkey);
-				// fprintf(stderr, "comment error: O%ld\n", *long_data);
-				// comp_customer->columns[col].data = &(tmp[1]);
-			}
-			else if(comp_customer->columns[col].columnName == "name"){
+	for(int col = 0 ; col < comp_customer->columnCount; col++){
+		long * long_data;
+		std::string  * string_data;
 
-
-			}
-			else if(comp_customer->columns[col].columnName == "address"){
-
-			}
-			else if(comp_customer->columns[col].columnName == "nationkey"){
-				// int * custkey_data = (int *)comp_customer->columns[col].data;
-				// custkey_data[i] = customer[i].nationkey;
-				// comp_customer->columns[col].data = custkey_data;
-			}
-			else if(comp_customer->columns[col].columnName == "phone"){
-
-			}
-			else if(comp_customer->columns[col].columnName == "acctbal"){
-				// double * custkey_data = (double *)comp_customer->columns[col].data;
-				// custkey_data[i] = customer[i].acctbal;
-				// comp_customer->columns[col].data = custkey_data;
-
-			}
-			else if(comp_customer->columns[col].columnName == "mktsegment"){
-
-			}
-			else if(comp_customer->columns[col].columnName == "comment"){
-
-			}
+		switch (col)
+		{
+		case 0: // custkey 
+			long_data = (long *)comp_customer->columns[col].originalData;
+			long_data[n_cust] = customer[n_cust].custkey;
+			comp_customer->columns[col].originalData = long_data;
+			break;
+		case 1: // name 
+			long_data = (long *)comp_customer->columns[col].data;
+			long_data[n_cust] = customer[n_cust].custkey;
+			comp_customer->columns[col].data = long_data;
+			// 向字典表中加入新值
+			// comp_customer->columns[col].dict.insert(customer[n_cust].name);
+			// 记录原始值
+			string_data = (std::string *)comp_customer->columns[col].originalData;
+			string_data[n_cust] = customer[n_cust].name;
+			comp_customer->columns[col].originalData = string_data;
+			break;
+		case 2:// address
+			// 记录原始值
+			std::string * custname_data = (std::string *)comp_customer->columns[col].originalData;
+			custname_data[n_cust] = customer[n_cust].address;
+			comp_customer->columns[col].originalData = custname_data;
+			break;
 			
-            // switch(comp_customer->columns[col].columnName){
+		
+		// default:
+		// 	fprintf(stderr, "col = %d \n", col);
+			
+		// 	break;
+		}
+		// if(comp_customer->columns[col].columnName == "custkey"){
+		// 	// int * data = static_cast<int*>(comp_customer->columns[col].data);
+		// 	// long data= customer[i].custkey;
+		// 	// fprintf(stderr, "i = %ld \n", i);
+		// 	long * custkey_data = (long *)comp_customer->columns[col].data;
+		// 	custkey_data[i] = customer[i].custkey;
+		// 	comp_customer->columns[col].data = custkey_data;
+			// fprintf(stderr, "i = %ld \n", *((long *)comp_customer->columns[col].data) + i);
+			// (long *)comp_customer->columns[col].data = &(customer[i].custkey);
+			// long * long_data = &(customer[i].custkey);
+			// fprintf(stderr, "comment error: O%ld\n", *long_data);
+			// comp_customer->columns[col].data = &(tmp[1]);
+		// }
+		// else if(comp_customer->columns[col].columnName == "name"){
 
-            //     case 'custkey':
-            //         comp_customer->columns[col].data[i] = &(customer.custkey[i]);
-            //         break;
 
-            //     case "name":
-            //         (int*)comp_customer->columns[col].data[i] = customer.name[i];
-            //         break;
+		// }
+		// else if(comp_customer->columns[col].columnName == "address"){
 
-            //     case "address":
-            //         (string*)comp_customer->columns[col].data[i] = customer.address[i];
-            //         break;
+		// }
+		// else if(comp_customer->columns[col].columnName == "nationkey"){
+		// 	// int * custkey_data = (int *)comp_customer->columns[col].data;
+		// 	// custkey_data[i] = customer[i].nationkey;
+		// 	// comp_customer->columns[col].data = custkey_data;
+		// }
+		// else if(comp_customer->columns[col].columnName == "phone"){
 
-            //     case "nationkey":
-            //         (int * )comp_customer->columns[col].data[i] = customer.nation_code[i];
-            //         break;
+		// }
+		// else if(comp_customer->columns[col].columnName == "acctbal"){
+		// 	// double * custkey_data = (double *)comp_customer->columns[col].data;
+		// 	// custkey_data[i] = customer[i].acctbal;
+		// 	// comp_customer->columns[col].data = custkey_data;
 
-            //     case "phone":
-            //         (string*)comp_customer->columns[col].data[i] = customer.phone[i];
-            //         break;
+		// }
+		// else if(comp_customer->columns[col].columnName == "mktsegment"){
 
-            //     case "acctbal":
-            //         (int * )comp_customer->columns[col].data[i] = customer.acctbal[i] * comp_customer->columns[col].scale;
-            //         break;
+		// }
+		// else if(comp_customer->columns[col].columnName == "comment"){
 
-            //     case "mktsegment":
-            //         (int * )comp_customer->columns[col].data[i] = customer.mktsegment_index[i];
-            //         break; 
+		// }
+		
+		// switch(comp_customer->columns[col].columnName){
 
-            //     case "comment":
-            //         (string *)comp_customer->columns[col].data[i] = customer.comment[i];
-            //         break; 
-            // }
+		//     case 'custkey':
+		//         comp_customer->columns[col].data[i] = &(customer.custkey[i]);
+		//         break;
+
+		//     case "name":
+		//         (int*)comp_customer->columns[col].data[i] = customer.name[i];
+		//         break;
+
+		//     case "address":
+		//         (string*)comp_customer->columns[col].data[i] = customer.address[i];
+		//         break;
+
+		//     case "nationkey":
+		//         (int * )comp_customer->columns[col].data[i] = customer.nation_code[i];
+		//         break;
+
+		//     case "phone":
+		//         (string*)comp_customer->columns[col].data[i] = customer.phone[i];
+		//         break;
+
+		//     case "acctbal":
+		//         (int * )comp_customer->columns[col].data[i] = customer.acctbal[i] * comp_customer->columns[col].scale;
+		//         break;
+
+		//     case "mktsegment":
+		//         (int * )comp_customer->columns[col].data[i] = customer.mktsegment_index[i];
+		//         break; 
+
+		//     case "comment":
+		//         (string *)comp_customer->columns[col].data[i] = customer.comment[i];
+		//         break; 
+		// }
     
-        }
+    
     }
 
     // printComTable(comp_customer);

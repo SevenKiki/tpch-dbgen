@@ -300,7 +300,7 @@ void
 gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 {
 	static order_t o;
-	supplier_t supp;
+	supplier_t supp; 
 	customer_t cust;
 	part_t part;
 	code_t code;
@@ -367,11 +367,12 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 
 			// make compressed table of customer
 			mk_comp_customer(i, &comp_customer, &cust);
+			
 			// fprintf (stderr, "cust compressed tabel gen end.\n");
 
 			// if (set_seeds == 0)
 			// 	tdefs[tnum].loader(&cust, upd_num);
-			pr_comp_table(comp_customer);
+			// pr_comp_table(comp_customer);
 			break;
 		case PSUPP:
 		case PART:
@@ -400,6 +401,9 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			dump_seeds(tnum);
 		}
 	}
+
+	pr_comp_table(comp_customer);
+
 	completed |= 1 << tnum;
 }
 
