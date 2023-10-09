@@ -402,7 +402,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 		}
 	}
 
-	pr_comp_table(comp_customer);
+	// pr_comp_table(comp_customer);
 
 	completed |= 1 << tnum;
 }

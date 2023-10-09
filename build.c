@@ -44,7 +44,7 @@
 
 #include "dss.h"
 #include "dsstypes.hpp"
-# include "iostream"
+#include "iostream"
 #include "storage/dict/dict.hpp"
 using namespace std;
 
@@ -191,33 +191,58 @@ void init_customer_table(comp_table *comp_customer){
 
 int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *customer){
     // if(n_cust == 0 ) init_customer_table(comp_customer);
+
 	for(int col = 0 ; col < comp_customer->columnCount; col++){
 		long * long_data;
+		int * int_data;
 		std::string  * string_data;
-
 		switch (col)
 		{
 		case 0: // custkey 
-			long_data = (long *)comp_customer->columns[col].originalData;
-			long_data[n_cust] = customer[n_cust].custkey;
+			long_data = (long*) &comp_customer->columns[col].originalData;
+			long_data[n_cust] = customer->custkey;
+			// memcpy(long_data + n_cust * sizeof(long), customer[n_cust].custkey, sizeof(long));
+
 			comp_customer->columns[col].originalData = long_data;
+			fprintf(stderr, "this line:: %ld\n", customer->custkey);
+			// fprintf(stderr, "this line");
+			// fprintf(stderr, "%d : %ld\n", n_cust, customer[n_cust].custkey);
 			break;
 		case 1: // name 
-			long_data = (long *)comp_customer->columns[col].data;
-			long_data[n_cust] = customer[n_cust].custkey;
+			long_data = (long *)&comp_customer->columns[col].data;
+			long_data[n_cust] = customer->custkey;
 			comp_customer->columns[col].data = long_data;
+			fprintf(stderr, "custkey:: %ld\n", customer->custkey);
 			// 向字典表中加入新值
 			// comp_customer->columns[col].dict.insert(customer[n_cust].name);
 			// 记录原始值
-			string_data = (std::string *)comp_customer->columns[col].originalData;
-			string_data[n_cust] = customer[n_cust].name;
+			string_data = (std::string *)&comp_customer->columns[col].originalData;
+			string_data[n_cust] = customer->name;
 			comp_customer->columns[col].originalData = string_data;
+			fprintf(stderr, "custname:: %s\n", customer->name);
 			break;
 		case 2:// address
 			// 记录原始值
-			std::string * custname_data = (std::string *)comp_customer->columns[col].originalData;
-			custname_data[n_cust] = customer[n_cust].address;
-			comp_customer->columns[col].originalData = custname_data;
+			fprintf(stderr, "address\n");
+			string_data = (std::string *)&comp_customer->columns[col].originalData;
+			string_data[n_cust] = customer->address;
+			comp_customer->columns[col].originalData = string_data;
+			break;
+		case 3: //nationkey
+			long_data = (int*) &comp_customer->columns[col].originalData;
+			long_data[n_cust] = customer->nation_code;
+			comp_customer->columns[col].originalData = long_data;
+			fprintf(stderr, "nationcode %ld\n", customer->nation_code);
+			// fprintf(stderr, "this line");
+			break;
+		case 4: // phone
+
+
+			break;
+		case 5: // acctbal
+			break;
+		case 6: // mktsegment
+			int_data = lookupString()
 			break;
 			
 		
