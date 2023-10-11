@@ -190,8 +190,6 @@ void init_customer_table(comp_table *comp_customer){
 }
 
 int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *customer){
-    // if(n_cust == 0 ) init_customer_table(comp_customer);
-
 	for(int col = 0 ; col < comp_customer->columnCount; col++){
 		long * long_data;
 		int * int_data;
@@ -236,103 +234,14 @@ int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *c
 			// fprintf(stderr, "this line");
 			break;
 		case 4: // phone
-
-
 			break;
 		case 5: // acctbal
 			break;
 		case 6: // mktsegment
-			int_data = lookupString()
+			// int_data = lookupString()
 			break;
-			
-		
-		// default:
-		// 	fprintf(stderr, "col = %d \n", col);
-			
-		// 	break;
 		}
-		// if(comp_customer->columns[col].columnName == "custkey"){
-		// 	// int * data = static_cast<int*>(comp_customer->columns[col].data);
-		// 	// long data= customer[i].custkey;
-		// 	// fprintf(stderr, "i = %ld \n", i);
-		// 	long * custkey_data = (long *)comp_customer->columns[col].data;
-		// 	custkey_data[i] = customer[i].custkey;
-		// 	comp_customer->columns[col].data = custkey_data;
-			// fprintf(stderr, "i = %ld \n", *((long *)comp_customer->columns[col].data) + i);
-			// (long *)comp_customer->columns[col].data = &(customer[i].custkey);
-			// long * long_data = &(customer[i].custkey);
-			// fprintf(stderr, "comment error: O%ld\n", *long_data);
-			// comp_customer->columns[col].data = &(tmp[1]);
-		// }
-		// else if(comp_customer->columns[col].columnName == "name"){
-
-
-		// }
-		// else if(comp_customer->columns[col].columnName == "address"){
-
-		// }
-		// else if(comp_customer->columns[col].columnName == "nationkey"){
-		// 	// int * custkey_data = (int *)comp_customer->columns[col].data;
-		// 	// custkey_data[i] = customer[i].nationkey;
-		// 	// comp_customer->columns[col].data = custkey_data;
-		// }
-		// else if(comp_customer->columns[col].columnName == "phone"){
-
-		// }
-		// else if(comp_customer->columns[col].columnName == "acctbal"){
-		// 	// double * custkey_data = (double *)comp_customer->columns[col].data;
-		// 	// custkey_data[i] = customer[i].acctbal;
-		// 	// comp_customer->columns[col].data = custkey_data;
-
-		// }
-		// else if(comp_customer->columns[col].columnName == "mktsegment"){
-
-		// }
-		// else if(comp_customer->columns[col].columnName == "comment"){
-
-		// }
-		
-		// switch(comp_customer->columns[col].columnName){
-
-		//     case 'custkey':
-		//         comp_customer->columns[col].data[i] = &(customer.custkey[i]);
-		//         break;
-
-		//     case "name":
-		//         (int*)comp_customer->columns[col].data[i] = customer.name[i];
-		//         break;
-
-		//     case "address":
-		//         (string*)comp_customer->columns[col].data[i] = customer.address[i];
-		//         break;
-
-		//     case "nationkey":
-		//         (int * )comp_customer->columns[col].data[i] = customer.nation_code[i];
-		//         break;
-
-		//     case "phone":
-		//         (string*)comp_customer->columns[col].data[i] = customer.phone[i];
-		//         break;
-
-		//     case "acctbal":
-		//         (int * )comp_customer->columns[col].data[i] = customer.acctbal[i] * comp_customer->columns[col].scale;
-		//         break;
-
-		//     case "mktsegment":
-		//         (int * )comp_customer->columns[col].data[i] = customer.mktsegment_index[i];
-		//         break; 
-
-		//     case "comment":
-		//         (string *)comp_customer->columns[col].data[i] = customer.comment[i];
-		//         break; 
-		// }
-    
-    
     }
-
-    // printComTable(comp_customer);
-
-
 }
 
 
