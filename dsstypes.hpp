@@ -198,7 +198,7 @@ int ld_supp    PROTO((void * supp, int mode));
 
 typedef struct
 {
-    DSS_HUGE            timekey;
+    DSS_HUGE            timekey; 
     char            alpha[DATE_LEN];
     long            year;
     long            month;

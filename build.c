@@ -570,6 +570,13 @@ struct
 	}
 };
 
+/**
+ * @brief 生成从JDAY_BASE开始的第index个日期
+ * 
+ * @param index 
+ * @param t 
+ * @return long 
+ */
 long
 mk_time(DSS_HUGE index, dss_time_t * t)
 {
