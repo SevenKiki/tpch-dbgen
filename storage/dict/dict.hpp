@@ -1,9 +1,10 @@
 # include "iostream"
 # include "vector"
 # include "string"
+# include "set"
 using namespace std;
 
-const vector<string> C_MKSEGEMNT = {
+const set<string> C_MKSEGEMNT = {
     "AUTOMOBILE",
     "BUILDING",
     "FURNITURE",

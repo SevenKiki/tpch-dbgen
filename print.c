@@ -458,13 +458,35 @@ int pr_comp_table(comp_table table){
     fprintf(stderr, " table column count %d\n", table.columnCount);
     // 输出前10行
     for(int i  = 0 ; i < 10; i++){
+        fprintf(stderr, "data of %d line \n", i);
         for(int j = 0 ; j < table.columnCount; j++){
-            // if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 ){
-                int *data = (int * )table.columns[j].data;
-                fprintf(stderr, "%d %d\n", i,data[i]);
-            // }
-            // else
-            //     fprintf(stderr, " %s\n", table.columns[j].data[i])
+            long * long_data;
+            int * int_data;
+                switch (j)
+                {
+                case 0:
+                    long_data = (long * )(table.columns[j].originalData);
+                    fprintf(stderr, "%ld ", long_data[i]);
+                    break;
+                case 1:
+                    long_data = (long * )table.columns[j].originalData;
+                    fprintf(stderr, "%ld ", long_data[i]);
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    int_data = (int *) table.columns[j].originalData;
+                    fprintf(stderr, "%d ", int_data[i]);
+                    break;
+                case 5:
+                case 6:
+                default:
+                    break;
+                }
+                
+                fprintf(stderr, "\n");
         }
 
     }

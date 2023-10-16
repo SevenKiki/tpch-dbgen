@@ -102,7 +102,7 @@ gen_phone(DSS_HUGE ind, char *target, long seed)
 }
 
 
-
+/** 原来的make customer line 函数
 long
 mk_cust(DSS_HUGE n_cust, customer_t * c)
 {
@@ -116,7 +116,7 @@ mk_cust(DSS_HUGE n_cust, customer_t * c)
 		bInit = 1;
 	}
 	c->custkey = n_cust; // custkey是连续数
-	sprintf(c->name, szFormat, C_NAME_TAG, n_cust);/*Customer#000000001 与custkey一一对应*/
+	sprintf(c->name, szFormat, C_NAME_TAG, n_cust);
 	V_STR(C_ADDR_LEN, C_ADDR_SD, c->address);
 	c->alen = (int)strlen(c->address);
 	RANDOM(i, 0, (nations.count - 1), C_NTRG_SD);
@@ -130,7 +130,68 @@ mk_cust(DSS_HUGE n_cust, customer_t * c)
 
 	return (0);
 }
+*/
 
+long
+mk_cust(DSS_HUGE n_cust, customer_t * c, comp_table * comp_customer)
+{
+	DSS_HUGE        i;
+	static int      bInit = 0;
+	static char     szFormat[100];
+	long * long_data;
+
+	if (!bInit)
+	{
+		sprintf(szFormat, C_NAME_FMT, 9, HUGE_FORMAT + 1);
+		bInit = 1;
+	}
+	/* custkey 无压缩 */
+	c->custkey = n_cust; 
+	long_data = (long*) (comp_customer->columns[0].originalData);
+	long_data[n_cust] = n_cust;
+	comp_customer->columns[0].originalData = long_data;
+	// (long*) comp_customer->columns[0].originalData[n_cust] = n_cust;
+	
+	/* name 压缩数据与custkey对应 */
+	sprintf(c->name, szFormat, C_NAME_TAG, n_cust);
+	((std::string *)&(comp_customer->columns[1].originalData))[n_cust] = c->name;
+	((long *)&(comp_customer->columns[1].data))[n_cust] = n_cust;
+
+	/* address 无压缩 */
+	V_STR(C_ADDR_LEN, C_ADDR_SD, c->address);
+	c->alen = (int)strlen(c->address);
+	((std::string *)&(comp_customer->columns[2].originalData))[n_cust] = c->address;
+
+	/* nationcode 无压缩*/
+	RANDOM(i, 0, (nations.count - 1), C_NTRG_SD);
+	c->nation_code = i;
+	((long * )&(comp_customer->columns[3].originalData))[n_cust] = c->nation_code;
+
+	/* phone 压缩值为前两个数字*/
+	gen_phone(i, c->phone, (long) C_PHNE_SD);
+	// std::string phone = c->phone
+	((std::string *)&(comp_customer->columns[4].originalData))[n_cust] = c->phone;
+	((int *)&(comp_customer->columns[4].data))[n_cust] = (c->phone[0]-'0') * 10 + (c->phone[1]-'0');
+
+	/* acctbal double型存储为long  */
+	RANDOM(c->acctbal, C_ABAL_MIN, C_ABAL_MAX, C_ABAL_SD);
+	// TODO: originData
+	((long * )&(comp_customer->columns[5].data))[n_cust] = c->acctbal;
+
+	/* mksegment 压缩为index*/
+	c->mktsegment_index = pick_str(&c_mseg_set, C_MSEG_SD, c->mktsegment);
+	// ((std::string *)&(comp_customer->columns[6].originalData))[n_cust] = c->mktsegment;
+	((int * )&(comp_customer->columns[6].data))[n_cust] = c->mktsegment_index;
+
+	/* comment 不压缩 */
+	TEXT(C_CMNT_LEN, C_CMNT_SD, c->comment);
+	c->clen = (int)strlen(c->comment);
+	((std::string *)&(comp_customer->columns[7].originalData))[n_cust] = c->comment;
+
+	return (0);
+}
+
+// void gen_dict(comp_table *comp_customer, std::vector<std::string> C_MKSEGEMNT, 6);
 
 void init_customer_table(comp_table *comp_customer){
 	fprintf(stderr, "init customer compressed table \n");
@@ -139,54 +200,32 @@ void init_customer_table(comp_table *comp_customer){
     comp_customer->columns = new comp_column[comp_customer->columnCount];
 
     // custkey
-    // comp_customer->columns[0].columnName = "custkey";
-    // comp_customer->columns[0].dataType = 3;
-    // comp_customer->columns[0].compType = 0;
-    comp_customer->columns[0].data = new long[comp_customer->rowCount];
+    comp_customer->columns[0].originalData = new DSS_HUGE[comp_customer->rowCount];
 
     // name
-    // comp_customer->columns[1].columnName = "name";
-    // comp_customer->columns[1].dataType = 2;
-    // comp_customer->columns[1].compType = 0;
-    comp_customer->columns[1].data = new string[comp_customer->rowCount];
+    comp_customer->columns[1].originalData = new string[comp_customer->rowCount];
+	comp_customer->columns[1].data = new DSS_HUGE[comp_customer->rowCount];
 
     //address
-    // comp_customer->columns[2].columnName = "address";
-    // comp_customer->columns[2].dataType = 2;
-    // comp_customer->columns[2].compType = 0;
-    comp_customer->columns[2].data = new string[comp_customer->rowCount];
+    comp_customer->columns[2].originalData = new string[comp_customer->rowCount];
 
-    //nationkey
-    // comp_customer->columns[3].columnName = "nationkey";
-    // comp_customer->columns[3].dataType = 3;
-    // comp_customer->columns[3].compType = 0;
-    comp_customer->columns[3].data = new int[comp_customer->rowCount];
+    //nationcode
+    comp_customer->columns[3].originalData = new DSS_HUGE[comp_customer->rowCount];
 
     //phone
-    // comp_customer->columns[4].columnName = "phone";
-    // comp_customer->columns[4].dataType = 2;
-    // comp_customer->columns[4].compType = 0;
-    comp_customer->columns[4].data = new string[comp_customer->rowCount];
+    comp_customer->columns[4].originalData = new string[comp_customer->rowCount];
+	comp_customer->columns[4].data = new int[comp_customer->rowCount];
 
     //acctbal
-    // comp_customer->columns[5].columnName = "acctbal";
-    // comp_customer->columns[5].dataType = 4;
-    // comp_customer->columns[5].compType = 1;
-    // comp_customer->columns[5].scale = 100;
-    comp_customer->columns[5].data = new int[comp_customer->rowCount];
+    comp_customer->columns[5].data = new DSS_HUGE[comp_customer->rowCount];
 
     //mktsegment
-    // comp_customer->columns[6].columnName = "mktsegment";
-    // comp_customer->columns[6].dataType = 2;
-    // comp_customer->columns[6].compType = 2;
     comp_customer->columns[6].data = new int[comp_customer->rowCount];
-    // comp_customer.columns[6].dict = C_MKSEGEMNT;
+    // gen_dict(comp_customer, C_MKSEGEMNT, 6);
+	comp_customer->columns[6].dict = C_MKSEGEMNT;
 
-    // comment 
-    // comp_customer->columns[7].columnName = "comment";
-    // comp_customer->columns[7].dataType = 1;
-    // comp_customer->columns[7].compType = 0;
-    comp_customer->columns[6].data = new string[comp_customer->rowCount];
+	// comment
+    comp_customer->columns[7].originalData = new string[comp_customer->rowCount];
 }
 
 int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *customer){
@@ -227,7 +266,7 @@ int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *c
 			comp_customer->columns[col].originalData = string_data;
 			break;
 		case 3: //nationkey
-			long_data = (int*) &comp_customer->columns[col].originalData;
+			long_data = (long*) &comp_customer->columns[col].originalData;
 			long_data[n_cust] = customer->nation_code;
 			comp_customer->columns[col].originalData = long_data;
 			fprintf(stderr, "nationcode %ld\n", customer->nation_code);

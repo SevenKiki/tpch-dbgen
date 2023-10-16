@@ -90,7 +90,7 @@ typedef struct
 }               customer_t;
 
 /* customers.c */
-long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c));
+long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c, comp_table * comp_c));
 int pr_cust    PROTO((customer_t * c, int mode));
 int ld_cust    PROTO((customer_t * c, int mode));
 int mk_comp_customer    PROTO((DSS_HUGE n_cust, comp_table *comp_c,  customer_t *c));

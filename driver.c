@@ -362,11 +362,11 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			break;
 		case CUST:
 			// fprintf (stderr, "cust tabel gen begin.\n");
-			mk_cust (i, &cust);
+			mk_cust (i, &cust, & comp_customer);
 			// fprintf (stderr, "cust tabel gen end.\n");
 
 			// make compressed table of customer
-			mk_comp_customer(i, &comp_customer, &cust);
+			// mk_comp_customer(i, &comp_customer, &cust);
 			
 			// fprintf (stderr, "cust compressed tabel gen end.\n");
 
@@ -402,7 +402,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 		}
 	}
 
-	// pr_comp_table(comp_customer);
+	pr_comp_table(comp_customer);
 
 	completed |= 1 << tnum;
 }
@@ -828,6 +828,8 @@ main (int ac, char **av)
 					rowcnt = tdefs[i].base;
 				if (verbose > 0)
 					fprintf (stderr, "Generating data for %s \n", tdefs[i].comment);
+				// TODO: fix i==3 
+				// if (i == 3) gen_tbl ((int)i, minrow, rowcnt, upd_num);
 				gen_tbl ((int)i, minrow, rowcnt, upd_num);
 				if (verbose > 0)
 					fprintf (stderr, "done.\n");
