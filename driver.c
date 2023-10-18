@@ -401,8 +401,8 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			dump_seeds(tnum);
 		}
 	}
-
-	pr_comp_table(comp_customer);
+	if (tnum == CUST)
+		pr_comp_table(comp_customer);
 
 	completed |= 1 << tnum;
 }

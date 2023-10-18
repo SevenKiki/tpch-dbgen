@@ -147,7 +147,7 @@ mk_cust(DSS_HUGE n_cust, customer_t * c, comp_table * comp_customer)
 	}
 	/* custkey 无压缩 */
 	c->custkey = n_cust; 
-	long_data = (long*) (comp_customer->columns[0].originalData);
+	long_data = (long*)&(comp_customer->columns[0].originalData);
 	long_data[n_cust] = n_cust;
 	comp_customer->columns[0].originalData = long_data;
 	// (long*) comp_customer->columns[0].originalData[n_cust] = n_cust;
