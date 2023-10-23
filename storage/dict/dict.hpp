@@ -1,10 +1,5 @@
-# include "iostream"
-# include "vector"
-# include "string"
-# include "set"
-using namespace std;
 
-const set<string> C_MKSEGEMNT = {
+const char C_MKSEGEMNT[C_MKSEGEMNT_COUNT][MAXAGG_LEN + 1] = {
     "AUTOMOBILE",
     "BUILDING",
     "FURNITURE",
@@ -12,8 +7,8 @@ const set<string> C_MKSEGEMNT = {
     "MACHINERY",
 };
 
-// COUNT:96
-const vector<string> P_NAME_COLOR = {
+// COUNT:92
+const char P_NAME_COLOR[P_NAME_COLOR_COUNT][COLOR_LEN + 1] = {
     "almond",
     "antique",
     "aquamarine",
@@ -109,7 +104,7 @@ const vector<string> P_NAME_COLOR = {
     };
 
 // COUNT : 150
-const vector<string> P_TYPE = {
+const char P_TYPE[P_TYPE_COUNT][P_TYPE_LEN + 1] = {
     "STANDARD ANODIZED TIN",
     "STANDARD ANODIZED NICKEL",
     "STANDARD ANODIZED BRASS",
@@ -262,7 +257,7 @@ const vector<string> P_TYPE = {
     "PROMO BRUSHED COPPER",
 };
 
-const vector<string> P_CONTAINER = {
+const char P_CONTAINER[P_CONTAINER_COUNT][P_CNTR_LEN + 1] = {
     "SM CASE",
     "SM BOX",
     "SM BAG",
@@ -305,18 +300,18 @@ const vector<string> P_CONTAINER = {
     "WRAP DRUM",
 };
 
-const vector<string> L_RETURNFLAG = {
+const char L_RETURNFLAG[L_RETURNFLAG_COUNT][2] = {
     "R","A",
 };
 
-const vector<string> L_SHIPINSTRUCT = {
+const char L_SHIPINSTRUCT[L_SHIPINSTRUCT_COUNT][MAXAGG_LEN + 1] = {
     "DELIVER IN PERSON",
     "COLLECT COD",
     "TAKE BACK RETURN",
     "NONE",
 };
 
-const vector<string> L_SHIPMODE = {
+const char L_SHIPMODE[L_SHIPMODE_COUNT][MAXAGG_LEN + 1] = {
     "REG AIR",
     "AIR",
     "RAIL",
@@ -327,7 +322,7 @@ const vector<string> L_SHIPMODE = {
 };
 
 // COUNT: 5
-const vector<string> O_ORDERPRIORITY = {
+const char O_ORDERPRIORITY[O_ORDERPRIORITY_COUNT][MAXAGG_LEN + 1] = {
     "1-URGENT",
     "2-HIGH",
     "3-MEDIUM",

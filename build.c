@@ -41,13 +41,9 @@
 #include <unistd.h>
 #endif
 #include <math.h>
-
 #include "dss.h"
 #include "dsstypes.hpp"
-#include "iostream"
 #include "storage/dict/dict.hpp"
-using namespace std;
-
 #ifdef ADHOC
 #include "adhoc.h"
 extern adhoc_t  adhocs[];
@@ -101,6 +97,21 @@ gen_phone(DSS_HUGE ind, char *target, long seed)
 	return;
 }
 
+void set_long_data(void * columnData, DSS_HUGE index, DSS_HUGE data){
+	((long *)columnData)[index] = data;
+}
+
+// void set_string_data(void * columnData, DSS_HUGE index, std::string data){
+// 	std::string * string_data = (std::string*)&(columnData);
+// 	string_data[index] = data;
+// 	columnData = string_data;
+// }
+
+void set_char_data(void * columnData, DSS_HUGE index, char * data){
+	strcpy(((char**)columnData)[index], data);
+}
+
+
 
 /** 原来的make customer line 函数
 long
@@ -146,93 +157,99 @@ mk_cust(DSS_HUGE n_cust, customer_t * c, comp_table * comp_customer)
 		bInit = 1;
 	}
 	/* custkey 无压缩 */
-	c->custkey = n_cust; 
-	long_data = (long*)&(comp_customer->columns[0].originalData);
-	long_data[n_cust] = n_cust;
-	comp_customer->columns[0].originalData = long_data;
-	// (long*) comp_customer->columns[0].originalData[n_cust] = n_cust;
+	c->custkey = n_cust;
+	set_long_data(comp_customer->columns[0].originalData, n_cust, n_cust);
 	
 	/* name 压缩数据与custkey对应 */
 	sprintf(c->name, szFormat, C_NAME_TAG, n_cust);
-	((std::string *)&(comp_customer->columns[1].originalData))[n_cust] = c->name;
-	((long *)&(comp_customer->columns[1].data))[n_cust] = n_cust;
+	set_char_data(comp_customer->columns[1].originalData, n_cust, c->name);
+	set_long_data(comp_customer->columns[1].data, n_cust, n_cust);
 
 	/* address 无压缩 */
-	V_STR(C_ADDR_LEN, C_ADDR_SD, c->address);
-	c->alen = (int)strlen(c->address);
-	((std::string *)&(comp_customer->columns[2].originalData))[n_cust] = c->address;
+	// V_STR(C_ADDR_LEN, C_ADDR_SD, c->address);
+	// c->alen = (int)strlen(c->address);
+	// ((std::string *)&(comp_customer->columns[2].originalData))[n_cust] = c->address;
 
 	/* nationcode 无压缩*/
-	RANDOM(i, 0, (nations.count - 1), C_NTRG_SD);
-	c->nation_code = i;
-	((long * )&(comp_customer->columns[3].originalData))[n_cust] = c->nation_code;
+	// RANDOM(i, 0, (nations.count - 1), C_NTRG_SD);
+	// c->nation_code = i;
+	// ((long * )&(comp_customer->columns[3].originalData))[n_cust] = c->nation_code;
 
 	/* phone 压缩值为前两个数字*/
-	gen_phone(i, c->phone, (long) C_PHNE_SD);
-	// std::string phone = c->phone
-	((std::string *)&(comp_customer->columns[4].originalData))[n_cust] = c->phone;
-	((int *)&(comp_customer->columns[4].data))[n_cust] = (c->phone[0]-'0') * 10 + (c->phone[1]-'0');
+	// gen_phone(i, c->phone, (long) C_PHNE_SD);
+	// ((std::string *)&(comp_customer->columns[4].originalData))[n_cust] = c->phone;
+	// ((int *)&(comp_customer->columns[4].data))[n_cust] = (c->phone[0]-'0') * 10 + (c->phone[1]-'0');
 
 	/* acctbal double型存储为long  */
-	RANDOM(c->acctbal, C_ABAL_MIN, C_ABAL_MAX, C_ABAL_SD);
-	// TODO: originData
-	((long * )&(comp_customer->columns[5].data))[n_cust] = c->acctbal;
+	// RANDOM(c->acctbal, C_ABAL_MIN, C_ABAL_MAX, C_ABAL_SD);
+	// // TODO: originData
+	// ((long * )&(comp_customer->columns[5].data))[n_cust] = c->acctbal;
 
 	/* mksegment 压缩为index*/
-	c->mktsegment_index = pick_str(&c_mseg_set, C_MSEG_SD, c->mktsegment);
-	// ((std::string *)&(comp_customer->columns[6].originalData))[n_cust] = c->mktsegment;
-	((int * )&(comp_customer->columns[6].data))[n_cust] = c->mktsegment_index;
+	// c->mktsegment_index = pick_str(&c_mseg_set, C_MSEG_SD, c->mktsegment);
+	// // ((std::string *)&(comp_customer->columns[6].originalData))[n_cust] = c->mktsegment;
+	// ((int * )&(comp_customer->columns[6].data))[n_cust] = c->mktsegment_index;
 
 	/* comment 不压缩 */
-	TEXT(C_CMNT_LEN, C_CMNT_SD, c->comment);
-	c->clen = (int)strlen(c->comment);
-	((std::string *)&(comp_customer->columns[7].originalData))[n_cust] = c->comment;
+	// TEXT(C_CMNT_LEN, C_CMNT_SD, c->comment);
+	// c->clen = (int)strlen(c->comment);
+	// ((std::string *)&(comp_customer->columns[7].originalData))[n_cust] = c->comment;
 
+	
+	
 	return (0);
 }
 
 // void gen_dict(comp_table *comp_customer, std::vector<std::string> C_MKSEGEMNT, 6);
 
-void init_customer_table(comp_table *comp_customer){
+void init_customer_table(comp_table & comp_customer){
 	fprintf(stderr, "init customer compressed table \n");
-    comp_customer->columnCount = 8;
-    comp_customer->rowCount = 150000; // SF = 1
-    comp_customer->columns = new comp_column[comp_customer->columnCount];
+    comp_customer.columnCount = 8;
+    comp_customer.rowCount = 150000; // SF = 1
+	// comp_customer->columns = new comp_column[comp_customer->columnCount];
+    comp_customer.columns = (comp_column *) malloc(sizeof(comp_column) * comp_customer.columnCount);
 
     // custkey
-    comp_customer->columns[0].originalData = new DSS_HUGE[comp_customer->rowCount];
+    // comp_customer->columns[0].originalData = new DSS_HUGE[comp_customer->rowCount];
+	void * tmp = malloc(sizeof(DSS_HUGE) * comp_customer.rowCount);
+	comp_customer.columns[0].originalData = tmp;
+	// comp_customer->columns[0].originalData = malloc(sizeof(DSS_HUGE) * comp_customer->rowCount);
 
     // name
-    comp_customer->columns[1].originalData = new string[comp_customer->rowCount];
-	comp_customer->columns[1].data = new DSS_HUGE[comp_customer->rowCount];
+	// comp_customer->columns[1].data = new DSS_HUGE[comp_customer->rowCount];
+    // comp_customer->columns[1].originalData = new char[comp_customer->rowCount][C_NAME_LEN + 3];
+	comp_customer.columns[1].data = malloc(sizeof(DSS_HUGE) * comp_customer.rowCount);
+	comp_customer.columns[1].originalData = malloc(sizeof(char*) * comp_customer.rowCount);
+	for(int i = 0; i < comp_customer.rowCount; i++)
+		((char**)comp_customer.columns[1].originalData)[i] = (char*)malloc(sizeof(char) * (C_NAME_LEN + 3));
 
     //address
-    comp_customer->columns[2].originalData = new string[comp_customer->rowCount];
+    // comp_customer->columns[2].originalData = new char[comp_customer->rowCount][C_ADDR_MAX + 1];
 
     //nationcode
-    comp_customer->columns[3].originalData = new DSS_HUGE[comp_customer->rowCount];
+    // comp_customer->columns[3].originalData = new DSS_HUGE[comp_customer->rowCount];
 
     //phone
-    comp_customer->columns[4].originalData = new string[comp_customer->rowCount];
-	comp_customer->columns[4].data = new int[comp_customer->rowCount];
+    // comp_customer->columns[4].originalData = new char[comp_customer->rowCount][PHONE_LEN + 1];
+	// comp_customer->columns[4].data = new int[comp_customer->rowCount];
 
     //acctbal
-    comp_customer->columns[5].data = new DSS_HUGE[comp_customer->rowCount];
+    // comp_customer->columns[5].data = new DSS_HUGE[comp_customer->rowCount];
 
     //mktsegment
-    comp_customer->columns[6].data = new int[comp_customer->rowCount];
+    // comp_customer->columns[6].data = new int[comp_customer->rowCount];
     // gen_dict(comp_customer, C_MKSEGEMNT, 6);
-	comp_customer->columns[6].dict = C_MKSEGEMNT;
+	// comp_customer->columns[6].dict = (char **) &C_MKSEGEMNT;
 
 	// comment
-    comp_customer->columns[7].originalData = new string[comp_customer->rowCount];
+    // comp_customer->columns[7].originalData = new char[comp_customer->rowCount][C_CMNT_LEN + 1];
 }
-
+/*
 int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *customer){
 	for(int col = 0 ; col < comp_customer->columnCount; col++){
 		long * long_data;
 		int * int_data;
-		std::string  * string_data;
+		string * string_data;
 		switch (col)
 		{
 		case 0: // custkey 
@@ -282,7 +299,7 @@ int mk_comp_customer( DSS_HUGE n_cust, comp_table *comp_customer,  customer_t *c
 		}
     }
 }
-
+*/
 
 /*
  * generate the numbered order and its associated lineitems

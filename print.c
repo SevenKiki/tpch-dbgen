@@ -462,6 +462,7 @@ int pr_comp_table(comp_table table){
         for(int j = 0 ; j < table.columnCount; j++){
             long * long_data;
             int * int_data;
+            char ** char_data;
                 switch (j)
                 {
                 case 0:
@@ -469,25 +470,25 @@ int pr_comp_table(comp_table table){
                     fprintf(stderr, "%ld ", long_data[i]);
                     break;
                 case 1:
-                    long_data = (long * )table.columns[j].originalData;
-                    fprintf(stderr, "%ld ", long_data[i]);
+                    long_data = (long * )table.columns[j].data;
+                    char_data = (char**) table.columns[j].originalData;
+                    fprintf(stderr, "%ld %s", long_data[i], char_data[i]);
                     break;
                 case 2:
                     break;
                 case 3:
                     break;
                 case 4:
-                    int_data = (int *) table.columns[j].originalData;
-                    fprintf(stderr, "%d ", int_data[i]);
+                    // int_data = (int *) table.columns[j].originalData;
+                    // fprintf(stderr, "%d ", int_data[i]);
                     break;
                 case 5:
                 case 6:
                 default:
                     break;
                 }
-                
-                fprintf(stderr, "\n");
         }
+        fprintf(stderr, "\n");
 
     }
 }

@@ -71,6 +71,7 @@
 #include <signal.h>
 #include <string.h>
 #include <errno.h>
+// #include "dss.h"
 #ifdef HP
 #include <strings.h>
 #endif
@@ -190,7 +191,7 @@ long sd_part_psupp (int child, DSS_HUGE skip_count);
 // 	"part.tbl", "part table", 200000,
 // 		pr_part, sd_part, PSUPP, 0
 // }
-tdef tdefs[] =
+struct tdef tdefs[] =
 {
 	{"part.tbl", "part table", 200000,
 		pr_part, sd_part, PSUPP, 0},
@@ -306,7 +307,7 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 	code_t code;
 
 	comp_table comp_customer;
-	init_customer_table(&comp_customer);
+	if(tnum == CUST) init_customer_table(comp_customer);
 	static int completed = 0;
 	DSS_HUGE i;
 
@@ -361,9 +362,9 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 				tdefs[tnum].loader(&supp, upd_num);
 			break;
 		case CUST:
-			// fprintf (stderr, "cust tabel gen begin.\n");
-			mk_cust (i, &cust, & comp_customer);
-			// fprintf (stderr, "cust tabel gen end.\n");
+			fprintf (stderr, "cust tabel gen begin.\n");
+			mk_cust (i, &cust, &comp_customer);
+			fprintf (stderr, "cust tabel gen end.\n");
 
 			// make compressed table of customer
 			// mk_comp_customer(i, &comp_customer, &cust);
@@ -828,8 +829,6 @@ main (int ac, char **av)
 					rowcnt = tdefs[i].base;
 				if (verbose > 0)
 					fprintf (stderr, "Generating data for %s \n", tdefs[i].comment);
-				// TODO: fix i==3 
-				// if (i == 3) gen_tbl ((int)i, minrow, rowcnt, upd_num);
 				gen_tbl ((int)i, minrow, rowcnt, upd_num);
 				if (verbose > 0)
 					fprintf (stderr, "done.\n");

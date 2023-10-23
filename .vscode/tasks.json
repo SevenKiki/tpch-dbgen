@@ -1,9 +1,22 @@
 {
     "tasks": [
         {
-            "type": "shell",
-            "label": "echo",
+            "label": "build",
             "command": "make",
+            "args": ["default"],
+            "type": "shell"
+        },
+        {
+            "label": "build-debug",
+            "command": "make",
+            "args": ["debug"],
+            "type": "shell"
+        },
+        {
+            "label": "clean",
+            "command": "make",
+            "args": ["clean"],
+            "type": "shell"
         }
     ],
     "version": "2.0.0"

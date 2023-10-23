@@ -2,7 +2,9 @@
   "files.associations": {
     "__availability": "c",
     "dss.h": "c",
-    "iosfwd": "cpp"
+    "iosfwd": "cpp",
+    "dsstypes.hpp": "c",
+    "stack": "c"
   },
   "C_Cpp_Runner.msvcBatchPath": "",
   "C_Cpp_Runner.cCompilerPath": "clang",
