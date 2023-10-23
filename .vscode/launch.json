@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "cppdbg",
+      "request": "launch",
+      "name": "Debug",
+      "program": "${workspaceFolder}/dbgen",
+      "args": [
+        "-v",
+        "-s",
+        "1"
+      ],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "echo"
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/yuki/Documents/Study/Lab/TPCH_Optimized/my-tpch-dbgen",
+      "program": "/Users/yuki/Documents/Study/Lab/TPCH_Optimized/my-tpch-dbgen/build/Debug/outDebug"
+    }
+  ]
+}

@@ -67,3 +67,13 @@
 #define  S_CMNT_SD     36
 #define  L_CMNT_SD     25
 
+#define C_MKSEGEMNT_COUNT       5
+#define P_NAME_COLOR_COUNT      92
+#define COLOR_LEN               10
+#define P_TYPE_COUNT            150
+#define P_CONTAINER_COUNT       40
+#define L_RETURNFLAG_COUNT      2
+#define L_SHIPINSTRUCT_COUNT    4
+#define L_SHIPMODE_COUNT        7
+#define O_ORDERPRIORITY_COUNT   5
+

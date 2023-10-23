@@ -35,27 +35,33 @@
  * and function prototypes
  */
 // # include <string>
-# include <string>
 
 
-// # include "iostream"
+# include "iostream"
 // # include "string"
-// using namespace std;
+using namespace std;
 
-typedef struct {
-    
-    std::string *  dictData;   
+typedef struct Dict{
+    char **  dictData;   
     int dictSize;
-}Dict;
+};
 
-typedef struct {
-    std::string columnName;
-    int dataType;       // 原本数据类型：1表示不定长字符串，2表示定长字符串，3表示整型，4表示浮点型
-    int compType;        // 压缩类型： 0表示没有压缩，1表示scale缩放，2表示字典表压缩
-    int scale;          // 缩放倍数， comType==1时，scale才有效
-    Dict *  dict;  // 字符串字典表，每个元素是一个指向字符串的指针
-    void* data;         // 数据指针，根据不同的数据类型使用不同的指针类型
-} comp_column;
+// typedef struct {
+//     std::string columnName;
+//     int dataType;       // 原本数据类型：1表示不定长字符串，2表示定长字符串，3表示整型，4表示浮点型
+//     int compType;        // 压缩类型： 0表示没有压缩，1表示scale缩放，2表示字典表压缩
+//     int scale;          // 缩放倍数， comType==1时，scale才有效
+//     Dict *  dict;  // 字符串字典表，每个元素是一个指向字符串的指针
+//     void* data;         // 数据指针，根据不同的数据类型使用不同的指针类型
+// } comp_column;
+
+typedef struct comp_column{
+    void * data;            // 压缩后的数据
+    // std::set <std::string> dict;          // 字符串字典表
+    char** dict;
+    int dictLength;         // 字典表长度
+    void * originalData;  // 原数据
+} ;
 
 typedef struct {
     comp_column* columns;    // 列数据数组
@@ -66,7 +72,7 @@ typedef struct {
 /*
  * typedefs
  */
-typedef struct
+struct customer_t
 {
     DSS_HUGE            custkey;
     char            name[C_NAME_LEN + 3];
@@ -79,15 +85,16 @@ typedef struct
     int             mktsegment_index;
     char            comment[C_CMNT_MAX + 1];
     int             clen;
-}               customer_t;
+}               ;
 
 /* customers.c */
-long mk_cust   PROTO((DSS_HUGE n_cust, customer_t * c));
-int pr_cust    PROTO((customer_t * c, int mode));
+long mk_cust   (DSS_HUGE n_cust, customer_t * c, comp_table * comp_customer);
+// long mk_cust   PROTO((DSS_HUGE n_cust, customer_t & c, comp_table & comp_c));
+int pr_cust    PROTO((void * c, int mode));
 int ld_cust    PROTO((customer_t * c, int mode));
 int mk_comp_customer    PROTO((DSS_HUGE n_cust, comp_table *comp_c,  customer_t *c));
 int pr_comp_table   PROTO((comp_table table));
-void init_customer_table PROTO((comp_table *comp_customer));
+void init_customer_table PROTO((comp_table &comp_customer));
 
 typedef struct/*Primary Key:ORDERKEY, LINENUMBER*/
 {
@@ -190,7 +197,7 @@ int ld_supp    PROTO((void * supp, int mode));
 
 typedef struct
 {
-    DSS_HUGE            timekey;
+    DSS_HUGE            timekey; 
     char            alpha[DATE_LEN];
     long            year;
     long            month;

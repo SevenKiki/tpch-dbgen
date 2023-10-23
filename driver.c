@@ -71,6 +71,7 @@
 #include <signal.h>
 #include <string.h>
 #include <errno.h>
+// #include "dss.h"
 #ifdef HP
 #include <strings.h>
 #endif
@@ -190,7 +191,7 @@ long sd_part_psupp (int child, DSS_HUGE skip_count);
 // 	"part.tbl", "part table", 200000,
 // 		pr_part, sd_part, PSUPP, 0
 // }
-tdef tdefs[] =
+struct tdef tdefs[] =
 {
 	{"part.tbl", "part table", 200000,
 		pr_part, sd_part, PSUPP, 0},
@@ -300,13 +301,13 @@ void
 gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 {
 	static order_t o;
-	supplier_t supp;
+	supplier_t supp; 
 	customer_t cust;
 	part_t part;
 	code_t code;
 
 	comp_table comp_customer;
-	init_customer_table(&comp_customer);
+	if(tnum == CUST) init_customer_table(comp_customer);
 	static int completed = 0;
 	DSS_HUGE i;
 
@@ -361,17 +362,16 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 				tdefs[tnum].loader(&supp, upd_num);
 			break;
 		case CUST:
-			// fprintf (stderr, "cust tabel gen begin.\n");
-			mk_cust (i, &cust);
-			// fprintf (stderr, "cust tabel gen end.\n");
+			mk_cust (i, &cust, &comp_customer);
 
 			// make compressed table of customer
-			mk_comp_customer(i, &comp_customer, &cust);
+			// mk_comp_customer(i, &comp_customer, &cust);
+			
 			// fprintf (stderr, "cust compressed tabel gen end.\n");
 
 			// if (set_seeds == 0)
 			// 	tdefs[tnum].loader(&cust, upd_num);
-			pr_comp_table(comp_customer);
+			// pr_comp_table(comp_customer);
 			break;
 		case PSUPP:
 		case PART:
@@ -400,6 +400,9 @@ gen_tbl (int tnum, DSS_HUGE start, DSS_HUGE count, long upd_num)
 			dump_seeds(tnum);
 		}
 	}
+	if (tnum == CUST)
+		pr_comp_table(comp_customer);
+
 	completed |= 1 << tnum;
 }
 
@@ -817,7 +820,9 @@ main (int ac, char **av)
 			}
 			else
 			{
-				minrow = 1;
+				// TODO: change minrow form 1 to 0
+				// minrow = 1;
+				minrow = 0;
 				if (i < NATION)
 					rowcnt = tdefs[i].base * scale;
 				else

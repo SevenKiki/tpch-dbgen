@@ -385,7 +385,7 @@ static FILE *fp = NULL;
         
    if (fp == NULL)
         fp = print_prep(REGION, mode);
-code_t* c = (code_t *) c_void;
+    code_t* c = (code_t *) c_void;
    PR_STRT(fp);
    PR_HUGE(fp, &c->code);
    PR_STR(fp, c->text, REGION_LEN);
@@ -458,14 +458,51 @@ int pr_comp_table(comp_table table){
     fprintf(stderr, " table column count %d\n", table.columnCount);
     // 输出前10行
     for(int i  = 0 ; i < 10; i++){
+        fprintf(stderr, "data of %d line \n", i);
         for(int j = 0 ; j < table.columnCount; j++){
-            if(table.columns[j].dataType==3 || table.columns[j].compType == 1 ||table.columns[j].compType == 2 ){
-                int *data = (int * )table.columns[j].data;
-                fprintf(stderr, " %d\n", data[i]);
-            }
-            // else
-            //     fprintf(stderr, " %s\n", table.columns[j].data[i])
+            long * long_data;
+            int * int_data;
+            char ** char_data;
+                switch (j)
+                {
+                case 0:
+                    long_data = (long * )(table.columns[j].originalData);
+                    fprintf(stderr, "%ld ", long_data[i]);
+                    break;
+                case 1:
+                    long_data = (long * )table.columns[j].data;
+                    char_data = (char**) table.columns[j].originalData;
+                    fprintf(stderr, "%ld %s |", long_data[i], char_data[i]);
+                    break;
+                case 2:
+                    char_data = (char**) table.columns[j].originalData;
+                    fprintf(stderr, " %s |", char_data[i]);
+                    break;
+                case 3:
+                    int_data = (int*) table.columns[j].originalData;
+                    fprintf(stderr, " %d |", int_data[i]);
+                    break;
+                case 4:
+                    char_data = (char**) table.columns[j].originalData;
+                    int_data = (int *)table.columns[j].data;
+                    fprintf(stderr, " %s = %d |", char_data[i], int_data[i]);
+                    break;
+                case 5:
+                    long_data = (long * )table.columns[j].data;
+                    fprintf(stderr, " %ld |", long_data[i]);
+                    break;
+                case 6:
+                    char_data = (char**) table.columns[j].originalData;
+                    int_data = (int *)table.columns[j].data;
+                    fprintf(stderr, " %s = %d |", char_data[i], int_data[i]);
+                    break;
+                case 7:
+                    char_data = (char**) table.columns[j].originalData;
+                    fprintf(stderr, " %s |", char_data[i]);
+                    break;
+                }
         }
+        fprintf(stderr, "\n");
 
     }
 }
